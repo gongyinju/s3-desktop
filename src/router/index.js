@@ -1,18 +1,34 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-Vue.use(VueRouter)
 import Home from '@/views/Home'
+import Login from '@/views/Login'
+import Index from '@/views/module/index'
+import Purchase from '@/views/module/purchase'
+
+Vue.use(VueRouter)
 
 let routes = [
   {
     path: '/',
-    component: Home
+    component: Login
   },
   {
-    path: '/products',
-    component: function (resolve) {
-      require(['@/views/Products'], resolve)
-    }
+    path: '/Home',
+    component: function (resolve) {require(['@/views/Home'], resolve)},
+    children:[
+      {
+        path: '/', 
+        component: Index
+      },
+      {
+        path: '/Purchase', 
+        component: Purchase 
+      },
+      {
+        path: '/Index', 
+        component: Index 
+      }
+    ]
   }
 ]
 

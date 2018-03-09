@@ -1,65 +1,44 @@
 <template>
   <div>
-      <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
-          <v-card color="blue-grey darken-2" class="white--text">
-            <v-card-title primary-title>
-              <div class="headline">customerId: {{user.customerId}}</div>
-            </v-card-title>
-            <v-card-text>
-              <div>userName: {{user.userName}}</div>
-            </v-card-text>
-            <v-card-actions>
-              <router-link to="/products"><v-btn flat dark>本地组件</v-btn></router-link>
-              <router-link to="/async"><v-btn flat dark>项目外组件</v-btn></router-link>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </v-layout>
+    <S3-header></S3-header>
+    <S3-nav></S3-nav>
+    <S3-footer></S3-footer>
   </div>
 </template>
 
 <script>
+
+import S3Nav from '@/components/S3Nav'
+import S3Header from '@/components/S3Header'
+import S3Footer from '@/components/S3Footer'
+
 export default {
   name: 'Home',
   data () {
     return {
     }
   },
-  computed: {
-    user () {
-      return this.$store.state.user
-    }
-  },
-  methods: {
-    changeUser () {
-      this.$store.commit('increment', {
-        user: {
-          userName: 'asdfasdf',
-          customerId: '342134'
-        }
-      })
-    },
-    hehe () {
-    }
-  }
+  components:{
+    S3Nav,
+    S3Header,
+    S3Footer}
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style>
+  .el-carousel{width:100%;height:300px;}
+  .el-carousel__item h3 {
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+  }
+
+  .el-carousel__item:nth-child(2n) {
+     background-color: #99a9bf;
+  }
+  
+  .el-carousel__item:nth-child(2n+1) {
+     background-color: #d3dce6;
+  }
 </style>
