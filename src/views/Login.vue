@@ -56,7 +56,7 @@ export default {
               if(res.data.status === '000'){
               // sessionStorage.setItem('user', JSON.stringify(user));
                 s3.istore.setItemLocal('user','admin')
-                _this.$router.push({ path: '/Home' })
+                _this.$router.push({ path: '/Index' })
                 //store.commit('mutations')
                 console.log(store.state.isLogedIn)
             }
