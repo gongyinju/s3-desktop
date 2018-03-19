@@ -1,84 +1,45 @@
 /**
- S3JS 宸ラ摱鑱氶」鐩紑鍙戠嫭绔嬪簲鐢ㄧ殑鏍稿績搴�
+ S3JS 工银聚项目开发独立应用的核心库
  */
-"use strict";
-var S3,s3;
-s3 = S3 = (function () {
-  //宸ュ叿绠变緷璧栦簬jquery
+(function (window) {
+  "use strict";
+  if(!window.S3){
+    window.S3 = {};
+    window.s3 = window.S3
+  }
+
+  var S3 = window.S3;
+
+  // axios
   if (typeof axios != 'function'){
     throw new ReferenceError("s3 needs axios,but not found.");
   }
 
-  var S3 = {};
-  if(typeof _ != 'undefined'){
-    S3 = _.noConflict();
-  }
   var VERSION = "2.0.0";
-
+  S3.version = function(){return VERSION;};
   /**
-   * 鍒ゆ柇鏄惁鏁扮粍
+   * 判断是否数组
    */
-  if(!S3.isArray){
-    S3.isArray = Array.isArray || function (obj) {
-      return Object.prototype.toString.call(obj) === '[object Array]';};
-  }
+  S3.isArray = Array.isArray || function (obj) {
+    return Object.prototype.toString.call(obj) === '[object Array]';
+  };
 
   /**
-   * 鏄惁鏄被鏁扮粍鐨勭粨鏋�
+   * 是否是类数组的结构
    * @param obj
    * @returns {boolean}
    * */
-  if(!S3.isArrayLike){
-    S3.isArrayLike = function(obj){
-      return !!(S3.isArray(obj) || obj.length);
-    };
-  }
+  S3.isArrayLike = function(obj){
+    return !!(S3.isArray(obj) || obj.length);
+  };
 
 
-
-  Date.prototype.format = function(fmt) {
-    var o = {
-      "M+" : this.getMonth()+1,                 //鏈堜唤
-      "d+" : this.getDate(),                    //鏃�
-      "h+" : this.getHours(),                   //灏忔椂
-      "m+" : this.getMinutes(),                 //鍒�
-      "s+" : this.getSeconds(),                 //绉�
-      "q+" : Math.floor((this.getMonth()+3)/3), //瀛ｅ害
-      "S"  : this.getMilliseconds()             //姣
-    };
-    if(!fmt) fmt = 'yyyy-MM-dd'
-    if(/(y+)/.test(fmt)) {
-      fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
-    }
-    for(var k in o) {
-      if(new RegExp("("+ k +")").test(fmt)){
-        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-      }
-    }
-    return fmt;
-  }
-
-
-  S3.version = function(){return VERSION;};
-  return S3;
-})();
-/**
- * Utils 閫氱敤鍔熻兘
- *
- */
-+function(factory){
-  if(typeof s3 != 'undefined'){
-    factory(s3)
-  }else{
-    factory(window)
-  }
-}(function(s3){
   /**
-   *鍒ゆ柇鏄惁鏄函瀵硅薄 绾瘂}涓嬬殑
+   *判断是否是纯对象 纯{}下的
    * @param obj
    * @return {boolean}
    */
-  var isPlainObject = function (obj) {
+  S3.isPlainObject = function (obj) {
     if(obj && Object.prototype.toString.call(obj) === "[object Object]"&& obj.constructor === Object
       && !Object.hasOwnProperty.call(obj,"constructor")){
       var key;
@@ -87,11 +48,12 @@ s3 = S3 = (function () {
     }
     return false;
   };
+
   /**
-   * 鍒ゆ柇鏄惁寰俊娴忚鍣�
+   * 判断是否微信浏览器
    * @returns {boolean}
    */
-  var isWeixin = function() {
+  S3.isWeixin = function() {
     var ua;
     ua = navigator.userAgent.toLowerCase();
     if(ua.match(/MicroMessenger/i) == "micromessenger") {
@@ -101,15 +63,85 @@ s3 = S3 = (function () {
     }
   };
 
-  // 褰撳墠鏃堕棿鎴�
+
+  /**
+   *
+   * @returns {*}
+   */
+  S3.extend = function() {
+    var options, name, src, copy, copyIsArray, clone;
+    var target = arguments[0];
+    var i = 1;
+    var length = arguments.length;
+    var deep = false;
+
+    // Handle a deep copy situation
+    if (typeof target === 'boolean') {
+      deep = target;
+      target = arguments[1] || {};
+      // skip the boolean and the target
+      i = 2;
+    }
+    if (target == null || (typeof target !== 'object' && typeof target !== 'function')) {
+      target = {};
+    }
+
+    for (; i < length; ++i) {
+      options = arguments[i];
+      // Only deal with non-null/undefined values
+      if (options != null) {
+        // Extend the base object
+        for (name in options) {
+          src = target[name];
+          copy = options[name];
+
+          // Prevent never-ending loop
+          if (target !== copy) {
+            // Recurse if we're merging plain objects or arrays
+            if (deep && copy && (isPlainObject(copy) || (copyIsArray = isArray(copy)))) {
+              if (copyIsArray) {
+                copyIsArray = false;
+                clone = src && isArray(src) ? src : [];
+              } else {
+                clone = src && isPlainObject(src) ? src : {};
+              }
+
+              // Never move original objects, clone them
+              target[name] = extend(deep, clone, copy);
+
+              // Don't bring in undefined values
+            } else if (typeof copy !== 'undefined') {
+              target[name] = copy;
+            }
+          }
+        }
+      }
+    }
+
+    // Return the modified object
+    return target;
+  }
+})(window);
+/**
+ * Utils 通用功能
+ *
+ */
++function(factory){
+  if(typeof s3 != 'undefined'){
+    factory(s3)
+  }else{
+    factory(window)
+  }
+}(function(s3){
+  // 当前时间戳
   var s3now = Date.now || function() {
     return new Date().getTime();
   };
   /*
-   * 绌洪棽鎺у埗 杩斿洖鍑芥暟杩炵画璋冪敤鏃讹紝绌洪棽鏃堕棿蹇呴』澶т簬鎴栫瓑浜� idle锛宎ction 鎵嶄細鎵ц
-   * @param idle   {number}    绌洪棽鏃堕棿锛屽崟浣嶆绉�
-   * @param action {function}  璇锋眰鍏宠仈鍑芥暟锛屽疄闄呭簲鐢ㄩ渶瑕佽皟鐢ㄧ殑鍑芥暟
-   * @return {function}    杩斿洖瀹㈡埛璋冪敤鍑芥暟
+   * 空闲控制 返回函数连续调用时，空闲时间必须大于或等于 idle，action 才会执行
+   * @param idle   {number}    空闲时间，单位毫秒
+   * @param action {function}  请求关联函数，实际应用需要调用的函数
+   * @return {function}    返回客户调用函数
    */
   var debounce = function(func, wait, immediate) {
     var timeout, args, context, timestamp, result;
@@ -145,12 +177,12 @@ s3 = S3 = (function () {
 
 
 
-  /* options鐨勯粯璁ゅ€�
-   *  琛ㄧず棣栨璋冪敤杩斿洖鍊兼柟娉曟椂锛屼細椹笂璋冪敤func锛涘惁鍒欎粎浼氳褰曞綋鍓嶆椂鍒伙紝褰撶浜屾璋冪敤鐨勬椂闂撮棿闅旇秴杩噖ait鏃讹紝鎵嶈皟鐢╢unc銆�
+  /* options的默认值
+   *  表示首次调用返回值方法时，会马上调用func；否则仅会记录当前时刻，当第二次调用的时间间隔超过wait时，才调用func。
    *  options.leading = true;
-   * 琛ㄧず褰撹皟鐢ㄦ柟娉曟椂锛屾湭鍒拌揪wait鎸囧畾鐨勬椂闂撮棿闅旓紝鍒欏惎鍔ㄨ鏃跺櫒寤惰繜璋冪敤func鍑芥暟锛岃嫢鍚庣画鍦ㄦ棦鏈揪鍒皐ait鎸囧畾鐨勬椂闂撮棿闅斿拰func鍑芥暟鍙堟湭琚皟鐢ㄧ殑鎯呭喌涓嬭皟鐢ㄨ繑鍥炲€兼柟娉曪紝鍒欒璋冪敤璇锋眰灏嗚涓㈠純銆�
+   * 表示当调用方法时，未到达wait指定的时间间隔，则启动计时器延迟调用func函数，若后续在既未达到wait指定的时间间隔和func函数又未被调用的情况下调用返回值方法，则被调用请求将被丢弃。
    *  options.trailing = true;
-   * 娉ㄦ剰锛氬綋options.trailing = false鏃讹紝鏁堟灉涓庝笂闈㈢殑绠€鍗曞疄鐜版晥鏋滅浉鍚�
+   * 注意：当options.trailing = false时，效果与上面的简单实现效果相同
    */
   var throttle = function(func, wait, options) {
     var timeout, context, args, result,previous = 0;
@@ -183,12 +215,10 @@ s3 = S3 = (function () {
 
   s3.debounce = debounce;
   s3.throttle = throttle;
-  s3.isPlainObject = isPlainObject;
-  s3.isWeixin = isWeixin();
 });
 
 /**
- *  rsa.js 鐢ㄦ潵澶勭悊rsa鍔犲瘑鐨勫嚱鏁�
+ *  rsa.js 用来处理rsa加密的函数
  */
 +function(factory){
   if(typeof s3 != 'undefined'){
@@ -975,11 +1005,11 @@ s3 = S3 = (function () {
 // Return the PKCS#1 RSA encryption of "text" as an even-length hex string
   function RSAEncrypt(text) {
     //var m = pkcs1pad2(text,(this.n.bitLength()+7)>>3);
-    /**鍙樻洿:
-     鍘绘帀浜嗗師妯鐨勮幏鍙栨柟寮�
-     澧炲姞浜嗘柊妯� mm鐨勮幏鍙栨柟寮�
-     鍙栨ā绠楁硶涓巎ava鐨剆ecurity鍖呬笅鐨勪笉涓€鑷达紝涓轰繚璇佷竴鑷存€у鍔犱簡涓や釜鍑芥暟string2bytes鐢ㄦ潵鑾峰緱涓€涓瓧绗︿覆鐨刡ytes,鍙︿竴涓繘琛屼簡棰勫鐞嗗皢bytes杞垚BigInteger,
-     纭繚涓嶫AVA鍚庡彴鍔犲瘑绠楁硶涓€鑷�
+    /**变更:
+     去掉了原模m的获取方式
+     增加了新模 mm的获取方式
+     取模算法与java的security包下的不一致，为保证一致性增加了两个函数string2bytes用来获得一个字符串的bytes,另一个进行了预处理将bytes转成BigInteger,
+     确保与JAVA后台加密算法一致
      **/
     var mm = preEncrypt(text); //
     if(mm == null) return null;
@@ -1022,7 +1052,7 @@ s3 = S3 = (function () {
 
 
   /**
-   *  rsa鍔犲瘑
+   *  rsa加密
    * @returns {string|*}
    * @constructor
    */
@@ -1041,87 +1071,64 @@ s3 = S3 = (function () {
     factory(window)
   }
 }(function(s3){
-  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-  axios.defaults.timeout = 3000;
-
-  var submitUrl,baseURL='http://109.6.29.153:3000/api';
-  /**
-   * ajax鏂规硶锛岄€氱敤
-   * @param {String} id
-   * @param {String} paramStr
-   * @param {String} appid
-   * @param {String} method
-   * @param {number} timeout
-   */
-  var ajax = function(id,paramStr,appid,method,timeout){
-    paramStr = paramStr || "";
-    appid = appid || getContextPath() ;
-    method = method || "post";
-    var submitUrl = getURL(),
-      headers = {},axios_config ={};
-    try{
-      headers.Token = token;
-    }catch(e){
-      headers = {};
-    }
-    if(!submitUrl)
-      submitUrl = baseURL;
-    var url = submitUrl+'/'+appid+id;
-
-    timeout ? axios_config = {params:paramStr,timeout:timeout} : axios_config = {params:paramStr};
-    if(method == 'post'){
-      var P_post = new Promise(function(resolve, reject){
-        axios.post(url,axios_config)
-          .then(function (res){
-            var retData =  res;
-            if(retData["ESPRESSO_RETURN_VERSION"]){
-              if(retData.status === "001"||retData.status === "002"||retData.status === "003"){
-                retData.retCode = '400';
-
-              }else
-                retData = retData.data;
-            }
-            resolve(retData);
-          }).catch(function (error) {
-          console.log(error)
-          reject({
-            status:"400",
-            retCode:"400",
-            retMsg:error
-          });
-          throw new Error(error);
-        });
-      });
-      return P_post;
-
-    }else if (method == 'get'){
-      var P_get = new Promise(function(resolve, reject){
-        axios.get(url,axios_config)
-          .then(function(res){
-            var retData =  res;
-            if(retData["ESPRESSO_RETURN_VERSION"]){
-              if(retData.status === "001"||retData.status === "002"||retData.status === "003"){
-                retData.retCode = '400';
-              }else
-                retData = retData.data;
-            }
-            resolve(retData);
-          }).catch(function(error){
-          console.log(error);
-          reject({
-            status:"400",
-            retCode:"400",
-            retMsg:error
-          });
-          throw new Error(error);
-        });
-      });
-      return P_get;
-    }
+  var defaultOptions = {
+    method: 'post',
+    timeout: 3000,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' //x-www-form-urlencoded
+    },
+    baseUrl: 'http://localhost:8080/mocks'
   };
 
   /**
-   * 寰幆璋冪敤锛屼粎鏀寔寮傛璋冪敤鏂瑰紡,鎺ュ彈涓€涓厛鍚庢湁璋冪敤鍏崇郴鐨勬暟缁�
+   * ajax方法，通用
+   * @param {String} url
+   * @param {String} param
+   * @param {String} appid
+   * @param {Object} options
+   */
+  var ajax = function(url,param,appid,options){
+    options = options || {};
+    param = param || {};
+    var option = s3.extend(defaultOptions,options);
+    appid = appid || 's3Core';
+    var urlReg = /(http)(s?):\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/)?([a-zA-Z0-9\-\,\?\,\'\/\\\+&amp;%\$#_]*)?/;
+    if(urlReg.test(url)){
+      option.url = url
+    }else{
+      option.url = option.baseUrl + '/'+ appid + url;
+    }
+    option.data = JSON.stringify(param);
+    if(!urlReg.test(option.baseUrl) && !urlReg.test(url)){
+      throw new Error("未定义的ajax提交地址 请先调用S3.setBaseUrl来定义ajax的提交地址.");
+    }
+    return new Promise(function(resolve, reject){
+      axios(option).then(function (res){
+        var retData =  res.data;
+        if(option.url.indexOf('unicorn.sdc.cs.icbc')>-1){
+          retData = JSON.parse(retData.result).data;
+        }
+        if(retData["ESPRESSO_RETURN_VERSION"]){
+          if(retData.status === "001"||retData.status === "002"||retData.status === "003"){
+            retData.retCode = '400';
+          }else
+            retData = retData.data;
+        }
+        console.log(retData)
+        resolve(retData);
+      }).catch(function (error) {
+        reject({
+          status:"400",
+          retCode:"400",
+          retMsg:error
+        });
+        throw new Error(error);
+      });
+    });
+  };
+
+  /**
+   * 循环调用，仅支持异步调用方式,接受一个先后有调用关系的数组
    * @param arr
    * @param resultBefore
    * @returns {*}
@@ -1147,29 +1154,15 @@ s3 = S3 = (function () {
 
 
   /**
-   *  鎸囧畾鎻愪氦鐨勫湴鍧€
+   *  指定提交的地址
    * @param url
    * @returns {*}
    */
-  var setURL = function(url){
-    return submitUrl = url;
+  var setBaseURL = function(url){
+    defaultOptions.baseUrl = url;
   };
 
-  /**
-   * 鍐呴儴鏂规硶锛岃幏鍙栨彁浜ゅ湴鍧€
-   * @returns {*}
-   */
-  var getURL = function(){
-    if(submitUrl){
-      return submitUrl;
-    }else if(typeof getSubmitURL === 'function'){
-      return getSubmitURL();
-    }else {
-      throw new Error("Undefined getSubmitURL銆傛湭瀹氫箟鐨刟jax鎻愪氦鍦板潃 璇烽€氳繃鍏叡鍑芥暟getSubmitURL鏉ュ畾涔塧jax鐨勬彁浜ゅ湴鍧€.");
-    }
-  };
-
-  s3.setURL = setURL;
+  s3.setBaseURL = setBaseURL;
   s3.ajax = ajax;
   s3.ajaxChain = recursiveAjax;
 });
@@ -1187,7 +1180,7 @@ s3 = S3 = (function () {
   var defaultAllowList = new Array("jpg","png","jpeg","txt","xls","doc","docx","xlsx","pdf","JPG","PNG","JPEG","TXT","XLS","DOC","DOCX","XLSX","PDF");
 
   /**
-   * 璁惧畾鍏佽鍒楄〃
+   * 设定允许列表
    * @param list
    */
   var setAllowList = function(list){
@@ -1197,29 +1190,17 @@ s3 = S3 = (function () {
   };
 
   /**
-   * 妫€鏌ユ槸鍚﹀厑璁�
+   * 检查是否允许
    * @param fileToUpload
-   * @param f
    * @returns {{status: string, retMsg: string}}
    */
-  var checkFile = function(fileToUpload,f){
-    var result = {
-      status:"000",
-      retMsg:"鏍￠獙鎴愬姛"
-    };
+  var checkFile = function(fileToUpload){
 
-    if(fileToUpload.type.indexOf("image")>-1 && typeof f == "function"){
-      var reader = new FileReader();
-      reader.onload = function(event){
-        f(event.target.result);
-      };
-      reader.readAsDataURL(fileToUpload);
-    }
-
+    var extName = "";
     if(fileToUpload.name.lastIndexOf(".")>-1){
       extName = fileToUpload.name.substring(fileToUpload.name.lastIndexOf(".")+1);
     }
-    //鏀寔甯哥敤鐨勫浘鐗囧強鏂囨湰鏍煎紡
+    //支持常用的图片及文本格式
     var listExtName = defaultAllowList;
     var flag = 0;
     for(var i = 0;i < listExtName.length; i++){
@@ -1227,72 +1208,184 @@ s3 = S3 = (function () {
         flag++;
       }
     }
+
+
+    var result;
     if(flag == 0){
       result = {
         status:"400",
-        retMsg:"涓嶈兘涓婁紶姝ょ鏍煎紡鐨勬枃浠�"
+        retMsg:"不符合规范的文件格式，请上传正确的文件格式"
       };
-    }else{
-      if(fileToUpload.size > 512000){
-        result = {
-          status:"400",
-          retMsg:"鏂囦欢涓嶈兘瓒呰繃500KB"
-        };
-      }
+    }else if(fileToUpload.size > 2048000){
+      result = {
+        status:"400",
+        retMsg:"上传文件过大，请保持文件不能超过2M"
+      };
+    }else {
+      result = {
+        status:"000",
+        retMsg:"校验成功"
+      };
     }
     return result;
   };
 
   /**
-   * 涓婁紶鏂囦欢
-   * @param fileToUpload  涓婁紶鐨勬枃浠�
-   * @param data  甯︽暟鎹殑涓婁紶
-   * @param url 涓婁紶鍦板潃
+   * 压缩图片的函数
+   * @param file
+   * @param quality
+   * @param callback
+   * @returns {boolean}
    */
-  var uploadFileToUrl = function(fileToUpload,data,url){
+  var imageCompress = function(file,quality,callback){
+    console.log(typeof file)
+    if(!file || file.type.indexOf("image") == -1){
+      return false
+    }
+    var reader = new FileReader();
+    var image = new Image();
+    reader.readAsDataURL(file)
+    reader.onload = function(){
+      var url = reader.result;  //src
+      image.src = url
+    }
+    image.onload = function(){
+      var dataUrl = compress(image,quality)
+      callback(dataUrl)
+    }
+  }
+
+
+  /**
+   * 图片压缩函数，返回一个dataUrl
+   * @param img
+   * @param quality
+   * @returns {*}
+   */
+  var compress = function(img,quality){
+    quality = quality || 0.92
+
+    var width = img.width
+    var height = img.height
+    //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
+    var ratio = width * height / 4000000;
+    if (ratio>1) {
+      ratio = Math.sqrt(ratio);
+      width /= ratio;
+      height /= ratio;
+    }else {
+      ratio = 1;
+    }
+
+    // 压缩
+    var cvs = document.createElement('canvas')
+    var ctx = cvs.getContext('2d')
+    var tCanvas = document.createElement('canvas')
+    var tctx = tCanvas.getContext('2d')
+
+    cvs.width = width;
+    cvs.height = height; // 铺底色
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+    var count;
+    if ((count = width * height / 1000000) > 1) {
+      count = ~~(Math.sqrt(count)+1);
+      //计算要分成多少块瓦片
+      // 计算每块瓦片的宽和高
+      var nw = ~~(width / count);
+      var nh = ~~(height / count);
+      tCanvas.width = nw;
+      tCanvas.height = nh; for (var i = 0; i < count; i++) { for (var j = 0; j < count; j++) {
+        tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
+        ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
+      }
+      }
+    } else {
+      ctx.drawImage(img, 0, 0, width, height);
+    }
+
+    //进行最小压缩
+    var dataUrl = cvs.toDataURL('image/jpeg', quality);
+    console.log('压缩前：' + img.src.length);
+    console.log('压缩后：' + dataUrl.length);
+    console.log('压缩率：' + ~~(100 * (img.src.length - dataUrl.length) / img.src.length) + "%");
+    tCanvas.width = tCanvas.height = cvs.width = cvs.height = 0;
+    return dataUrl;
+  }
+
+
+  /**
+   * 图片转换函数
+   * @param data
+   */
+  function dataURLToFile(data) {
+    data = window.atob(data.split(",")[1]);
+    var ia = new Uint8Array(data.length)
+    for(var i = 0; i< data.length; i++){
+      ia[i] = data.charCodeAt(i);
+    }
+    var file = new Blob([ia],{ type : 'image/jpeg'})
     var fd = new FormData();
-    fd.append("file",fileToUpload);
+    fd.append('file',file);
+    return fd;
+  }
+
+
+  /**
+   * 上传文件
+   * @param url 上传地址
+   * @param fileToUpload  上传的文件
+   * @param data  带数据的上传
+   */
+  var uploadFileToUrl = function(url,fileToUpload,data){
+    var urlReg = /(http)(s?):\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/)?([a-zA-Z0-9\-\,\?\,\'\/\\\+&amp;%\$#_]*)?/;
+    if(!urlReg.test(url)){
+      throw new Error("未定义的上传文件地址, 请通过公共函数getUploadURL来定义上传地址.");
+    }
+
+    // 填充文件
+    var fd;
+    if(typeof fileToUpload == 'object' &&　fileToUpload.type){
+      fd = new FormData();
+      fd.append("file",fileToUpload);
+    }else{
+      fd = dataURLToFile(fileToUpload)
+    }
+
+    // 增加其他参数
     if(typeof data === "object"){
       for(var key in data){
         fd.append(key,data[key]);
       }
     }
-
-    var uploadURL;
-    if(url != undefined){
-      uploadURL = url;
-    }else if(typeof getUploadURL == 'function'){
-      uploadURL = getUploadURL();
-    }
-
-    if(uploadURL == undefined){
-      throw new Error("鏈畾涔夌殑涓婁紶鏂囦欢鍦板潃, 璇烽€氳繃鍏叡鍑芥暟getUploadURL鏉ュ畾涔変笂浼犲湴鍧€.");
-    }else{
-      var P = new Promise(function(resolve, reject){
-        axios.post(uploadURL,fd)
-          .then(function(res){
-            var retData = res;
-            if(retData["ESPRESSO_RETURN_VERSION"]) {
-              if (retData.status === "001" || retData.status === "002" || retData.status === "003") {
-                retData.retCode = '400';
-              } else{
-                retData = retData.data;
-              }
+    var promise = new Promise(function(resolve, reject){
+      axios.post(url,fd,{
+        headers: { 'Content-Type' : 'multipart/form-data'}
+      })
+        .then(function(res){
+          var retData = res;
+          if(retData["ESPRESSO_RETURN_VERSION"]) {
+            if (retData.status === "001" || retData.status === "002" || retData.status === "003") {
+              retData.retCode = '400';
+            } else{
+              retData = retData.data;
             }
-            resolve(retData);
-          })
-          .catch(function(error){
-            console.log(error);
-            reject(error);
-          });
-      });
-      return P;
-    }
+          }
+          resolve(retData);
+        })
+        .catch(function(error){
+          console.log(error);
+          reject(error);
+        });
+    });
+    return promise;
   };
 
 
   s3.checkFile = checkFile;
   s3.setAllow = setAllowList;
+  s3.imageCompress = imageCompress;
   s3.upload = uploadFileToUrl;
 });
 /**
@@ -1305,56 +1398,87 @@ s3 = S3 = (function () {
     factory(window)
   }
 }(function(s3){
-  window.localStorage.setItem('a', 123);
-  if (window.localStorage && window.localStorage.getItem('a') === '123') {
+
+  if (window.localStorage && (window.localStorage.setItem('a', 123), window.localStorage.getItem('a') == 123)) {
     s3.istore = {
-      getItem :function(key){
+      get: function(key){
         if (sessionStorage.getItem(key))
           return JSON.parse(sessionStorage.getItem(key));
         else
           return sessionStorage.getItem(key)
       },
-      setItem:function(key,value){
+      set: function(key,value){
         sessionStorage.setItem(key,JSON.stringify(value));
       },
-      removeItem:function(key){
+      remove:function(key){
         sessionStorage.removeItem(key);
       },
-      getItemLocal : function(key){
+      getLocal : function(key){
         if(localStorage.getItem(key))
           return JSON.parse(localStorage.getItem(key));
         else
           return localStorage.getItem(key)
       },
-      setItemLocal : function(key,value){
+      setLocal : function(key,value){
         localStorage.setItem(key,JSON.stringify(value));
       },
-      removeItemLocal : function(key){
+      removeLocal : function(key){
         localStorage.removeItem(key);
       }
     };
   }else{
     var storage = {};
     window.localStorageCache = {};
-    storage.setItemLocal = function(key,value){
+    window.sessionStorageCache = {};
+    storage.setLocal = function(key,value){
       window.localStorageCache[key] = value;
     };
-    storage.getItemLocal = function(key){
+    storage.getLocal = function(key){
       return window.localStorageCache[key];
     };
-    storage.removeItemLocal = function(key){
+    storage.removeLocal = function(key){
       delete  window.localStorageCache[key];
+    };
+    storage.setLocal = function(key,value){
+      window.sessionStorageCache[key] = value;
+    };
+    storage.getLocal = function(key){
+      return window.sessionStorageCache[key];
+    };
+    storage.removeLocal = function(key){
+      delete  window.sessionStorageCache[key];
     };
     s3.istore = storage;
   }
 });
 /**
- Number Calculator 鏁版嵁/閲戦璁＄畻鍣�
+ Number Calculator 数据/金额计算器
  */
 +function(){
+  Date.prototype.format = function(fmt) {
+    var o = {
+      "M+" : this.getMonth()+1,                 //月份
+      "d+" : this.getDate(),                    //日
+      "h+" : this.getHours(),                   //小时
+      "m+" : this.getMinutes(),                 //分
+      "s+" : this.getSeconds(),                 //秒
+      "q+" : Math.floor((this.getMonth()+3)/3), //季度
+      "S"  : this.getMilliseconds()             //毫秒
+    };
+    if(!fmt) fmt = 'yyyy-MM-dd'
+    if(/(y+)/.test(fmt)) {
+      fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+    }
+    for(var k in o) {
+      if(new RegExp("("+ k +")").test(fmt)){
+        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+      }
+    }
+    return fmt;
+  }
 
   /**
-   * 淇濊瘉绮剧‘鎬х殑鏁板€间箻娉�
+   * 保证精确性的数值乘法
    * @param n1
    * @param n2
    * @returns {Number}
@@ -1364,7 +1488,7 @@ s3 = S3 = (function () {
       s1 = Number(n1).toString(),
       s2 = Number(n2).toString(),
       t = s1.split(".");
-    //鍒ゆ柇灏忔暟鐐�
+    //判断小数点
     if (t[1]) {
       m += t[1].length;
     }
@@ -1375,7 +1499,7 @@ s3 = S3 = (function () {
     return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
   };
   /**
-   * 纭繚绮惧害鐨勬暟鍊煎姞娉�
+   * 确保精度的数值加法
    * @param n1
    * @param n2
    * @returns {Number}
@@ -1394,7 +1518,7 @@ s3 = S3 = (function () {
     return Math.round(Number(n1) * m + Number(n2) * m) / m;
   };
   /**
-   * 纭繚绮惧害鐨勬暟鍊煎噺娉�
+   * 确保精度的数值减法
    * @param n1
    * @param n2
    * @returns {Number}
@@ -1414,11 +1538,11 @@ s3 = S3 = (function () {
   };
 
   /**
-   * 鐩稿绮剧‘鐨勬暟鍊奸櫎娉�
+   * 相对精确的数值除法
    *
    * @param n1
    * @param n2
-   * @param num  淇濈暀鍑犱綅灏忔暟
+   * @param num  保留几位小数
    * @returns {Number}
    */
   var divide = function (n1, n2,num) {
@@ -1454,7 +1578,7 @@ s3 = S3 = (function () {
   };
 
   /**
-   * 鏁板瓧鏍煎紡鍖栦负閲戦琛ㄨ揪寮�
+   * 数字格式化为金额表达式
    * @param value
    * @returns {*}
    */
@@ -1466,12 +1590,12 @@ s3 = S3 = (function () {
     var hasMinus = false;
     var reg = /(-?\d+)(\d{3})/;
     var index = value.indexOf('.');
-    //涓鸿礋鏁�
+    //为负数
     if (value.indexOf('-') != -1) {
       value = value.replace(/[-]/g, '');
       hasMinus = true;
     }
-    //娌℃湁灏忔暟鐐�
+    //没有小数点
     if (index == -1){
       while (reg.test(value)){
         value =  value.replace(reg,"$1,$2");
@@ -1491,9 +1615,9 @@ s3 = S3 = (function () {
     }
   };
   /**
-   * 浠烽挶鍗曚綅杞崲
-   * @param n1 浼犲叆鏁板€�
-   * @param n2 淇濈暀浣嶆暟
+   * 价钱单位转换
+   * @param n1 传入数值
+   * @param n2 保留位数
    * @returns {String}
    */
   var numFormat = function (n1,n2) {
@@ -1507,7 +1631,7 @@ s3 = S3 = (function () {
     pointPart= n1.slice(n1Index);
     n1Index != -1 ? n1 = n1.slice(0,n1Index):n1;
     n2 == "" || n2 == undefined? n2=2:n2;
-    //涓鸿礋鏁�
+    //为负数
     if (n1.indexOf('-') != -1) {
       n1 = n1.replace(/[-]/g, '');
       hasMinus = true;
@@ -1517,24 +1641,24 @@ s3 = S3 = (function () {
     if (num>=11000 && num<110000000) {
       num = num /10000;
       if(num.toString().indexOf('.') == -1){
-        n1 = num+ '涓囧厓';
+        n1 = num+ '万元';
       }else{
         index = num.toString().indexOf('.');
         len = index+n2+1;
-        n1 = num.toString().slice(0,len)+ '涓囧厓';
+        n1 = num.toString().slice(0,len)+ '万元';
       }
     }else if (num >= 110000000) {
       num = num / 100000000;
       if(num.toString().indexOf('.') == -1){
-        n1 = num+ '浜垮厓';
+        n1 = num+ '亿元';
       }else{
         index = num.toString().indexOf('.');
         len = index+n2+1;
-        n1 = num.toString().slice(0,len) + '浜垮厓';
+        n1 = num.toString().slice(0,len) + '亿元';
       }
     }else{
       pointPart = pointPart.slice(0,n2+1);
-      n1Index != -1 ? n1 = num + pointPart + '鍏�' :n1 = num + '鍏�';
+      n1Index != -1 ? n1 = num + pointPart + '元' :n1 = num + '元';
     }
     if (hasMinus) {
       return ('-' + n1);
@@ -1544,18 +1668,18 @@ s3 = S3 = (function () {
   };
 
   /**
-   * 閲戦绫诲瀷杞崲
+   * 金额类型转换
    * @param {}
-   * @type  杞崲绫诲瀷 0鍗曚环 | 1灏忚 | 2鎬诲拰 | 3鍏朵粬
+   * @type  转换类型 0单价 | 1小计 | 2总和 | 3其他
    * @returns {number || string}
    */
   var moneyFormat = function (num,obj) {
-    //榛樿鏈€灏戜繚鐣欎袱浣�
+    //默认最少保留两位
     obj.bitLength !== ''  ? Number(obj.bitLength) : obj.bitLength = 2;
-    //榛樿閰嶇疆鍗曚綅涓哄厓
+    //默认配置单位为元
     obj.unit ? obj.unit :obj.unit = "0";
     num = num * Math.pow(10, obj.bitLength);
-    // 鍒ゆ柇鑸嶅彇鏂瑰紡
+    // 判断舍取方式
     switch(true){
       case obj.roundOff == '1' :
         num = Number(Math.floor(num)).toString().split(".")[0];
@@ -1568,11 +1692,11 @@ s3 = S3 = (function () {
         break;
     }
     num = Number(num) / Math.pow(10, obj.bitLength);
-    //褰撲繚鐣欎綅鏁颁负鏁存暟鏃�
+    //当保留位数为整数时
     if(obj.bitLength == 0){
       return num
     }else{
-      //褰撴湁淇濈暀浣嶆暟浣嗙洰鍓嶄负鏁存暟鏃�
+      //当有保留位数但目前为整数时
       if(num.toString().indexOf('.') == -1){
         var len = Math.pow(10, obj.bitLength).toString().replace('1','');
         return num + "." + len;
@@ -1589,7 +1713,7 @@ s3 = S3 = (function () {
   };
 
   /**
-   * 绉婚櫎閫楀彿鍒嗛殧绗�
+   * 移除逗号分隔符
    * @param value
    * @returns {*|string|{example, overwrite, disable_template_processing}|void|XML}
    */
@@ -1597,7 +1721,7 @@ s3 = S3 = (function () {
     return value === undefined ? value : value.replace(/,/g, '');
   };
 
-  //Number.prototype 鎵╁睍
+  //Number.prototype 扩展
   Number.prototype.add = function(n){
     n = Number(n);
     if(isNaN(n))
@@ -1654,7 +1778,7 @@ s3 = S3 = (function () {
 }(function(s3){
 
   /**
-   *  璁℃椂鍣�
+   *  计时器
    * @param f
    * @param start
    * @param interval
@@ -1676,20 +1800,20 @@ s3 = S3 = (function () {
   }
 
   /**
-   * 瀹氭椂寮€濮嬶紝鍙墽琛屼竴娆�
-   * @param fn    鎵ц鍑芥暟
-   * @param start 寮€濮嬫椂闂�
+   * 定时开始，只执行一次
+   * @param fn    执行函数
+   * @param start 开始时间
    */
   var timeout = function(fn,start){
     invoke(fn,start)
   };
 
   /**
-   * 瀹氭椂寮€濮嬶紝寰幆鎵ц
-   * @param fn 鎵ц鐨勫嚱鏁�
-   * @param start  寮€濮嬫椂闂�
-   * @param interval  鎵ц闂撮殧
-   * @param end   缁撴潫鏃堕棿
+   * 定时开始，循环执行
+   * @param fn 执行的函数
+   * @param start  开始时间
+   * @param interval  执行间隔
+   * @param end   结束时间
    */
   var interval = function(fn,start,interval,end){
     invoke(fn,start,interval,end);
@@ -1700,7 +1824,7 @@ s3 = S3 = (function () {
   }
 });
 /**
- * Utils 閫氱敤鍔熻兘
+ * Utils 通用功能
  *
  */
 +function(factory){
@@ -1713,36 +1837,36 @@ s3 = S3 = (function () {
 
 
 
-//浼犲叆鏁版嵁鏍煎紡
+//传入数据格式
 //   var data=[
 //    	{
-//     		"name": "鍒樺埄搴�",
-//     		"company": "涓滆蒋",
+//     		"name": "刘利康",
+//     		"company": "东软",
 //     		"age": 26,
-//     		"sex": "鐢�"
+//     		"sex": "男"
 // 		},
 // 		{
-//     		"name": "鑼冧僵鐟�",
-//     		"company": "a杞�",
+//     		"name": "范佩瑶",
+//     		"company": "a软",
 //     		"age": 21,
-//     		"sex": "濂�"
+//     		"sex": "女"
 // 		}
 // 	];
 
-  //鎺掑簭杞崲鍚庤繑鍥炴暟鎹�
+  //排序转换后返回数据
   //  var data=[
   //     {
-  //         "sorts":"L", //鍒嗙被key
+  //         "sorts":"L", //分类key
   //         "details":[
   //             {
-  //                 "name": "鍚曢敠绋�",
+  //                 "name": "吕锦程",
   //                 "age": 21,
-  //                 "sex": "鐢�"
+  //                 "sex": "男"
   //             },
   //             {
-  //                 "name": "鍒樺埄搴�",
+  //                 "name": "刘利康",
   //                 "age": 26,
-  //                 "sex": "鐢�"
+  //                 "sex": "男"
   //             }
   //         ]
   //     },
@@ -1789,16 +1913,16 @@ s3 = S3 = (function () {
   }
 
   /****************************
-   姹夊瓧杞嫾闊斥啈鈫戔啈鈫戔啈鈫�
+   汉字转拼音↑↑↑↑↑↑
    *****************************/
 
 
-  //鎸夋嫾闊抽瀛楁瘝鎺掑簭锛堟敮鎸佷腑鑻辨枃锛�
-  /*	@param data 浼犲叆鏁版嵁锛堝弬鑰冮《閮ㄤ緥瀛愶級
-   *	@param name 浼犲叆鍒嗙粍鎺掑簭鐨刱ey 锛堥粯璁わ細name = "name"锛�
+  //按拼音首字母排序（支持中英文）
+  /*	@param data 传入数据（参考顶部例子）
+   *	@param name 传入分组排序的key （默认：name = "name"）
    */
 
-  var ABCSort = function(data, name){//鍙傛暟:鍘熷鏁版嵁
+  var ABCSort = function(data, name){//参数:原始数据
 
     if(!name){
       name="name"
@@ -1808,26 +1932,26 @@ s3 = S3 = (function () {
 
     for(var i=0;i<data.length;i++){
       if(data[i][name]){
-        //鑾峰彇濮撳悕鎷奸煶棣栧瓧姣�
+        //获取姓名拼音首字母
         firstName=data[i].sorts=codefans_net_CC2PY(data[i][name]).substr(0,1);
 
-        //缁熶竴杞ぇ鍐欏瓧姣嶏紙閫傜敤浜庤嫳鏂囧瓧姣嶆帓搴忥級
+        //统一转大写字母（适用于英文字母排序）
         arr.push(firstName.toUpperCase());
       }else{
-        alert("绗�"+(i+1)+"鏉′紶鍏ユ暟鎹牸寮忎笉瀵癸紝璇峰弬鑰働inYin.js璇存槑锛�");
+        alert("第"+(i+1)+"条传入数据格式不对，请参考PinYin.js说明！");
         return false;
       }
     }
 
-    //鎷奸煶棣栧瓧姣嶆暟缁勫幓閲�
-    var arrlist=[];//鏁扮粍鐢ㄤ簬鎺掑簭
+    //拼音首字母数组去重
+    var arrlist=[];//数组用于排序
     for(i=0;i<arr.length;i++){
       if(arrlist.indexOf(arr[i])==-1){
         arrlist.push(arr[i]);
       }
     }
 
-    //鏁版嵁鎸夋嫾闊抽瀛楁瘝鍒嗙被閲嶇粍
+    //数据按拼音首字母分类重组
     var dataSort=[];
     for(var i=0;i<arrlist.length;i++){
       dataSort[i]={sorts:arrlist[i]};
@@ -1852,9 +1976,9 @@ s3 = S3 = (function () {
   }
   /********************************************/
 
-  //缁勫悕鍒嗙被锛堜笉鎺掑簭锛�
-  /*	@param data 浼犲叆鏁版嵁锛堝繀浼狅細鍙傝€冮《閮ㄤ緥瀛愶級
-   *	@param teamStr 浼犲叆鍒嗙粍鎺掑簭鐨刱ey (蹇呬紶)
+  //组名分类（不排序）
+  /*	@param data 传入数据（必传：参考顶部例子）
+   *	@param teamStr 传入分组排序的key (必传)
    */
 
   var  groupSort = function(data,teamStr){
@@ -1870,10 +1994,10 @@ s3 = S3 = (function () {
     }
 
     if(arr == []){
-      alert("浼犲叆鍒嗙粍key鍊间笉瀛樺湪锛�")
+      alert("传入分组key值不存在！")
     }
 
-    //sorts鍘婚噸
+    //sorts去重
     var arrlist=[];
     for(i=0;i<arr.length;i++){
       if(arrlist.indexOf(arr[i])==-1){
@@ -1881,7 +2005,7 @@ s3 = S3 = (function () {
       }
     }
 
-    //鏁扮粍鎸変紶鍏ュ瓧娈甸噸缁�
+    //数组按传入字段重组
     var dataSort=[];
     for(var i=0;i<arrlist.length;i++){
       dataSort[i]={sorts:arrlist[i]};

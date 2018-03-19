@@ -50,8 +50,7 @@ export default {
         if (valid) {
           this.logining = true
           var loginParams = {username: this.ruleForm.account, password: this.ruleForm.checkPass}
-          s3.setURL('http://localhost:8080/mocks')
-          s3.ajax('/user', {}, 's3core')
+          s3.ajax('/user', {}, 's3core','')
             .then(function (res) {
               if(res.data.status === '000'){
               // sessionStorage.setItem('user', JSON.stringify(user));
