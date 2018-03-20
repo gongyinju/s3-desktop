@@ -1,17 +1,31 @@
 <template>
 <div class="login">
-  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-    <h3 class="title">系统登录</h3>
-    <el-form-item prop="account">
-      <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input>
-    </el-form-item>
-    <el-form-item prop="checkPass">
-      <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input>
-    </el-form-item>
-    <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
-    <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="submitFrom" :loading="logining">登录</el-button>
-    </el-form-item>
+  <p class="logo-title">您好！欢迎来到{{company}}</p>
+  <el-form :model="ruleForm" :rules="rules" ref="ruleForm"  label-width="0" class="demo-ruleForm login-container">
+    <h3 class="title">用户登录</h3>
+    <div style=" padding: 35px 35px 15px 35px;">
+      <el-form-item prop="account" >
+        <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input>
+      </el-form-item>
+      <el-form-item prop="checkPass">
+        <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input>
+      </el-form-item>
+      <el-row>
+        <el-col :span="12">
+          <div class="grid-content">
+            <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="grid-content" style="text-align: right;font-size: 14px;">
+            <router-link to="/">忘记密码？</router-link>
+          </div>
+        </el-col>
+      </el-row>
+      <el-form-item style="width:100%;">
+        <el-button type="primary" style="width:100%;" @click.native.prevent="submitFrom" :loading="logining">登录</el-button>
+      </el-form-item>
+    </div>
   </el-form>
   <s3-footer></s3-footer>
 </div>
@@ -24,6 +38,17 @@ import S3Footer from '@/components/S3Footer'
 
 export default {
   name: 'login',
+  components: {S3Footer},
+  props:{
+    company: {
+      type: String,
+      default:'某某集团'
+    },
+    images:{
+      type: String,
+      default:'http://img.hb.aicdn.com/b4e756dff556ef08277874acd970c6a14219290b3285e-5yoSex_fw658'
+    }
+  },
   data () {
     return {
       logining: false,
@@ -42,20 +67,19 @@ export default {
       checked: true
     }
   },
-  components: {S3Footer},
   methods: {
     submitFrom (ev) {
       var _this = this
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.logining = true
-          var loginParams = {username: this.ruleForm.account, password: this.ruleForm.checkPass}
+          var loginParams = {username: this.ruleForm.account, password: this.ruleForm.checkPass};
           s3.ajax('/user', {}, 's3core','')
             .then(function (res) {
               if(res.data.status === '000'){
               // sessionStorage.setItem('user', JSON.stringify(user));
-                s3.istore.setItemLocal('user','admin')
-                _this.$router.push({ path: '/Index' })
+                s3.istore.setItemLocal('user','admin');
+                _this.$router.push({ path: '/Index' });
                 //store.commit('mutations')
                 console.log(store.state.isLogedIn)
             }
@@ -71,31 +95,39 @@ export default {
 
 <style scoped>
   .login{
-    width:100%;height:100%;
+    width:100%;
+    height:100%;
     background-color:red;
     position:fixed;
     top:0;left:0;
-    z-index:5;
+  }
+  .logo-title{
+    margin-left: 70px;
+    margin-top:10px;
+    color:#fff;
+    font-size: 14px;
   }
   .login-container {
-    /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
     -webkit-border-radius: 5px;
-    border-radius: 5px;
     -moz-border-radius: 5px;
+    border-radius: 5px;
     background-clip: padding-box;
-    margin: 100px auto;
-    width: 350px;
-    padding: 35px 35px 15px 35px;
+    margin: 60px auto;
+    width: 480px;
     background: #fff;
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;
+  }
   .title {
-    margin: 0px auto 40px auto;
-    text-align: center;
+    margin: 0 auto;
+    padding:15px 35px;
+    text-align: left;
+    border-bottom:2px solid #66b1ff;
     color: #505458;
+    background-color:#f0f0f0 ;
   }
   .remember {
-    margin: 0px 0px 35px 0px;
+    margin: 0 0 35px 0;
   }
-  }
+
 </style>

@@ -22,5 +22,7 @@ export default {
 
 <style>
 	#app{padding-bottom:80px;}
-
+  .skin-color{
+    color:#409EFF;
+  }
 </style>

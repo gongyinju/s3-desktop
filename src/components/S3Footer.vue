@@ -1,14 +1,27 @@
 <template>
 <div>
   <el-container>
-    <el-footer>copyright@2017<img class="logo" src="../assets/logo.png" alt="" width="80" height="30"></el-footer>
+    <el-footer>{{company}}copyright@{{fullyear}}<img class="logo" :src="images" alt="" width="80" height="30"></el-footer>
   </el-container>
 </div>
 </template>
 
 <script>
 export default {
-    name: "s3-footer"
+    name: "s3-footer",
+    props:{
+      company: {
+        type: String,
+        default:'某某集团'
+      },
+      images:{
+        type: String,
+        default:'http://img.hb.aicdn.com/b4e756dff556ef08277874acd970c6a14219290b3285e-5yoSex_fw658'
+      }
+    },
+  created(){
+    this.fullyear = new Date().getFullYear();
+  },
 }
 </script>
 
