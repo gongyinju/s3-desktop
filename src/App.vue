@@ -25,4 +25,7 @@ export default {
   .skin-color{
     color:#409EFF;
   }
+  .text-black{
+    color:#303133;
+  }
 </style>

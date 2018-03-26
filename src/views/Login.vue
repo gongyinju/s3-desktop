@@ -1,39 +1,40 @@
 <template>
-<div class="login">
-  <p class="logo-title">您好！欢迎来到{{company}}</p>
-  <el-form :model="ruleForm" :rules="rules" ref="ruleForm"  label-width="0" class="demo-ruleForm login-container">
-    <h3 class="title">用户登录</h3>
-    <div style=" padding: 35px 35px 15px 35px;">
-      <el-form-item prop="account" >
-        <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input>
-      </el-form-item>
-      <el-form-item prop="checkPass">
-        <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input>
-      </el-form-item>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content">
-            <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="grid-content" style="text-align: right;font-size: 14px;">
-            <router-link to="/">忘记密码？</router-link>
-          </div>
-        </el-col>
-      </el-row>
-      <el-form-item style="width:100%;">
-        <el-button type="primary" style="width:100%;" @click.native.prevent="submitFrom" :loading="logining">登录</el-button>
-      </el-form-item>
-    </div>
-  </el-form>
-  <s3-footer></s3-footer>
-</div>
+  <div class="login">
+    <p class="logo-title">您好！欢迎来到{{company}}</p>
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm"  label-width="0" class="demo-ruleForm login-container">
+      <h3 class="title">用户登录</h3>
+      <div style=" padding: 35px 35px 15px 35px;">
+        <el-form-item prop="account" >
+          <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input>
+        </el-form-item>
+        <el-form-item prop="checkPass">
+          <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input>
+        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <div class="grid-content">
+              <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <div class="grid-content" style="text-align: right;font-size: 14px;">
+              <router-link to="/findPassword">忘记密码？</router-link>
+            </div>
+          </el-col>
+        </el-row>
+        <el-form-item style="width:100%;">
+          <el-button type="primary" style="width:100%;" @click.native.prevent="submitFrom" :loading="logining">登录</el-button>
+        </el-form-item>
+      </div>
+    </el-form>
+    <s3-footer></s3-footer>
+  </div>
 </template>
 
 <script>
 
-import store from '@/store/index.js'
+import {mapActions} from 'vuex'
+import store from '@/store'
 import S3Footer from '@/components/S3Footer'
 
 export default {
@@ -68,20 +69,16 @@ export default {
     }
   },
   methods: {
-    submitFrom (ev) {
-      var _this = this
-      this.$refs.ruleForm.validate((valid) => {
+    submitFrom: function (ev) {
+      console.log(this)
+      var that = this
+      that.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.logining = true
-          var loginParams = {username: this.ruleForm.account, password: this.ruleForm.checkPass};
-          s3.ajax('/user', {}, 's3core','')
-            .then(function (res) {
-              if(res.data.status === '000'){
-              // sessionStorage.setItem('user', JSON.stringify(user));
-                s3.istore.setItemLocal('user','admin');
-                _this.$router.push({ path: '/Index' });
-                //store.commit('mutations')
-                console.log(store.state.isLogedIn)
+          var loginParams = {username: this.ruleForm.account, password: this.ruleForm.checkPass}
+          s3.ajax('/login', loginParams, 'usermanage').then((res) => {
+            if(res.retCode === '200') {
+               that.$router.push('/Home')
             }
           })
         } else {
@@ -89,6 +86,10 @@ export default {
         }
       })
     }
+    // forgetPassword: function ( ){
+    //   var that = this;
+    //   that.$router.push('/findPassword')
+    // }
   }
 }
 </script>

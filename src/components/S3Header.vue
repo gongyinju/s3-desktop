@@ -2,23 +2,18 @@
     <div class="head">
       <div class="head_main">
         <div class="head_main_logo">
-          <img src="../assets/logo.png" alt="">
-          <span>上游测试环境</span>
+          <img :src="images" alt="">
+          <span>{{company}}</span>
         </div>
         <div class="head_main_info">
-          <span>你好，XXX，您当前的角色是管理员！</span>
+          <span>你好，<span class="skin-color">某某某下游经销商</span>，您当前的角色是<span class="skin-color" style="padding-left: 5px;">{{this.value}}</span>！</span>
           <span class="mar_l20">角色切换：</span>
           <el-select style="width:100px;" size="mini" v-model="value" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          <span class="mar_l10"><i style="left:-5px" class="iconfont icon-yonghuming"></i>用户信息</span>
-          <span class="mar_l10"><i style="left:-5px;top:2px;" class="iconfont icon-xiugaimima2"></i>修改密码</span>
-          <span class="mar_l10"><i style="left:-5px;top:1px;" class="iconfont icon-tuichu"></i>退出</span>
+          <el-button type="text" class="text-black"><i style="left:-5px" class="iconfont icon-yonghuming"></i>用户信息</el-button>
+          <el-button type="text" class="text-black"><i style="left:-5px;top:2px;" class="iconfont icon-xiugaimima2"></i>修改密码</el-button>
+          <el-button type="text" class="text-black" @click.native.prevent="logout"><i style="left:-5px;top:1px;" class="iconfont icon-tuichu"></i>退出</el-button>
         </div>
       </div>
     </div>
@@ -29,22 +24,36 @@ export default {
 data() {
   return {
       options: [{
-        value: '选项1',
-        label: '黄金糕'
+        value: '经销商',
+        label: '经销商'
       }, {
-        value: '选项2',
-        label: '双皮奶'
+        value: '财务',
+        label: '财务'
       }, {
         value: '选项3',
-        label: '蚵仔煎'
+        label: '中后卫'
       }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: '前锋',
+        label: '前锋'
       }],
-        value: ''
+     value: '经销商'//默认角色
+    }
+  },
+  props:{
+    company: {
+      type: String,
+      default:'某某集团'
+    },
+    images:{
+      type: String,
+      default:'http://img.hb.aicdn.com/b4e756dff556ef08277874acd970c6a14219290b3285e-5yoSex_fw658'
+    }
+  },
+  methods:{
+    logout: function () {  //退出
+      var that = this;
+      s3.istore.remove('user')
+      that.$router.push('/')
     }
   }
 }
