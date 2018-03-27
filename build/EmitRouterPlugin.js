@@ -18,10 +18,12 @@ function resolve(dir) {
 }
 
 
-function exportJson(data){
+function exportJson(data,project){
   // 输出文件
   var w_data = new Buffer(data)
-  fs.writeFile(resolve('mocks/router.json'), w_data,{}, function (err) {
+  var url = 'mocks' + ('/'+project||'') + '/config/router.json'
+  console.log(url)
+  fs.writeFile(resolve(url), w_data,{}, function (err) {
     if (err) {
       console.error(err)
     } else {
@@ -34,9 +36,10 @@ class EmitRouterPlugin {
 
   constructor(options){
     this.router = []
-    this.module = options.module || ''
-    this.url = options.url || 'http://localhost:8080/components/'
-    this.routes = options.routes || []
+    this.module = options['module'] || ''
+    this.url = options['url'] || 'http://localhost:8080/components/'
+    this.routes = options['routes'] || []
+    this.project = options['project']
   }
 
 
@@ -87,13 +90,14 @@ class EmitRouterPlugin {
         })
 
         self.router.push({
-          path: self.module + route.path,
-          url: self.url+name
+          path: route.path,
+          url: self.url+name,
+          name: route['name'] || '组件'
         })
 
       })
 
-      exportJson(JSON.stringify(self.router))
+      exportJson(JSON.stringify(self.router),self.project)
       // callback在最后必须调用
       callback()
     })

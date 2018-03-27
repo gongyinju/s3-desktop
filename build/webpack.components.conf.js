@@ -46,7 +46,7 @@ module.exports = {
     'vue': 'Vue',
     'vue-router': 'VueRouter',
     'vuex': 'Vuex',
-    'vuetify': 'Vuetify',
+    'mint': 'mint-ui',
     'axios': 'axios'
   },
   module: {

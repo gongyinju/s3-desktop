@@ -10,14 +10,18 @@
 				</li>
 			</ul>
 		</div>
-		<router-view class="main"></router-view>
 	</div>	
 </template>
 
 <script>
 
 export default{
-	props:["nav"]
+	props:{
+		nav :{
+			type: Array,
+			required:true
+		}
+	}
 }
 
 

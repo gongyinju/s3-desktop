@@ -2,14 +2,14 @@ const JSLoader = {
   name: 'js-loader',
   render (createElement) {
     var self = this
-    if (!window.istore.getItemLocal(this.url)) {
+    if (!s3.istore.getLocal(this.url)) {
       return createElement('script', {
         attrs: {
           type: 'text/javascript', src: self.url
         },
         on: {
           load: function () {
-            window.istore.setItemLocal(self.url, 'loaded')
+            s3.istore.setLocal(self.url, 'loaded')
             self.$emit('load')
           }
         }

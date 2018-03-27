@@ -1,10 +1,11 @@
 import store from './../store'
 
+
 var defaultOptions = {
   method: 'post',
   timeout: 3000,
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' //x-www-form-urlencoded
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' //x-www-form-urlencoded
   },
   baseUrl: 'http://localhost:8080/mocks'
 }
@@ -46,7 +47,7 @@ s3.ajax = function(url,param,appid,options){
           retData = retData.data
         }
       }
-
+      
       if(retData["status"] && retData.status === "004"){
         store.commit('userLogout')
         store.commit('setCurrentUser',null)
@@ -62,16 +63,15 @@ s3.ajax = function(url,param,appid,options){
         resolve(retData)
       }
     }).catch(function (error) {
-      reject({
-        status:"400",
-        retCode:"400",
-        retMsg:error
-      })
-      throw new Error(error)
+        reject({
+            status:"400",
+            retCode:"400",
+            retMsg:error
+        })
+        throw new Error(error)
     })
   })
 }
-
 
 const HttpProtptype = function () {}
 

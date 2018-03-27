@@ -2,16 +2,19 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import actions from './actions'
 import mutations from './mutations'
+import getters from './getters'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    user: {
-      customerId: '020020',
-      userName: '一个假设的经销商名称'
+    page:{
+      title:'',
+      backState:'',
+      goHome: false
     },
-
+    appid: 's3Core',
+    isFirstLogedIn:false,
     isLogedIn: false,
     currentUser: null, // 当前登录用户
     roles: null, // 当前用户的所有角色
@@ -21,6 +24,7 @@ const store = new Vuex.Store({
   },
   actions: actions,
   mutations: mutations,
+  getters: getters,
   modules: {
   }
 })

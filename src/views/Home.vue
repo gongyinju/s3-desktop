@@ -2,6 +2,7 @@
   <div>
     <s3-header></s3-header>
     <s3-nav :nav="nav"></s3-nav>
+    <router-view></router-view>
     <s3-footer></s3-footer>
   </div>
 </template>

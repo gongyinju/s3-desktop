@@ -1,8 +1,11 @@
 export default {
+
+  setAppId (state,appid){
+    state.appid = appid
+  },
   setCurrentUser (state, user) {
-    if (user !== undefined) {
-      state.currentUser = user
-    }
+    s3.istore.set('currentUser',user)
+    state.currentUser = user
   },
   setCurrentDealer (state, dealer) {
   	if (dealer !== undefined) {
@@ -19,14 +22,21 @@ export default {
   	  state.currentRole = role
   	}
   },
+
   userLogin (state) {
+    s3.istore.set('isLogedIn',true)
   	state.isLogedIn = true
   },
   userLogout (state) {
+    s3.istore.remove('currentUser')
+    s3.istore.remove('isLogedIn')
   	state.isLogedIn = false
+    state.currentUser = null
   },
-
-  increment (state,user){
-    state.user = user
+  userFirstLogin (state,firstLoginFlag) {
+    state.isFirstLogedIn = firstLoginFlag
+  },
+  pageinfo (state,page){
+    state.page = page
   }
 }
