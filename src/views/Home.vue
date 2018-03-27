@@ -1,27 +1,39 @@
 <template>
   <div>
-    <S3-header></S3-header>
-    <S3-nav></S3-nav>
-    <S3-footer></S3-footer>
+    <s3-header></s3-header>
+    <s3-nav :nav="nav"></s3-nav>
+    <s3-footer></s3-footer>
   </div>
 </template>
 
 <script>
 
-import S3Nav from '@/components/S3Nav'
-import S3Header from '@/components/S3Header'
-import S3Footer from '@/components/S3Footer'
+import s3Nav from '@/components/s3-nav'
+import s3Header from '@/components/s3-header'
+import s3Footer from '@/components/s3-footer'
 
 export default {
+
   name: 'Home',
   data () {
     return {
+      nav:[]
     }
   },
   components:{
-    S3Nav,
-    S3Header,
-    S3Footer}
+    s3Nav,
+    s3Header,
+    s3Footer
+  },
+  created(){
+    //获取导航数据
+    s3.ajax('/nav',{},'config')
+      .then(res =>{
+        this.nav = res.roleList;
+    })
+  }
+
+
 }
 </script>
 

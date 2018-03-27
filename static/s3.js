@@ -1114,7 +1114,6 @@
           }else
             retData = retData.data;
         }
-        console.log(retData)
         resolve(retData);
       }).catch(function (error) {
         reject({

@@ -1,5 +1,25 @@
 <template>
 	<div>
-		<p>这是采购订单</p>
+		<s3-breadcrumb :title="breadcrumb"></s3-breadcrumb>
+		<s3-leftMenu :leftNav="leftNav"></s3-leftMenu>
 	</div>
 </template>
+
+<script>
+
+import s3LeftMenu from '@/components/s3-leftMenu'
+import s3Breadcrumb from '@/components/s3-breadcrumb'
+
+	export default{
+		components:{
+			s3LeftMenu,
+			s3Breadcrumb
+		},
+		data(){
+			return {
+				breadcrumb:"采购订单",
+				leftNav:''
+			}
+		}
+	}
+</script>

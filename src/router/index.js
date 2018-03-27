@@ -3,9 +3,10 @@ import VueRouter from 'vue-router'
 import store from '@/store'
 import Home from '@/views/Home'
 import Login from '@/views/Login'
-import findPassword from '@/components/s3-findPassword'
 import Index from '@/views/module/index'
 import Purchase from '@/views/module/purchase'
+import Check from '@/views/module/check'
+import MyInstock from '@/views/module/myInstock'
 
 Vue.use(VueRouter)
 
@@ -13,7 +14,6 @@ let routes = [
   {
     path: '/',
     component: Login
-    // meta: {requiresAuth: true}
   },
   {
     path: '/Home',
@@ -26,18 +26,25 @@ let routes = [
       },
       {
         path: '/Purchase',
-        component: Purchase
+        component: function (resolve) {require(['@/views/module/purchase'], resolve)}
       },
       {
         path: '/Index',
-        component: Index
+        component: function (resolve) {require(['@/views/module/index'], resolve)}
+      },
+      {
+        path: '/Check',
+        component: function (resolve) {require(['@/views/module/check'], resolve)}
       }
     ]
   },
   {
-    path:'/findPassword',
-    component:findPassword
-  }
+    path: '/MyInstock',
+    component: {
+      rightMain:MyInstock
+    }
+  },
+
 ]
 
 var router = new VueRouter({

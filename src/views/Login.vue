@@ -35,11 +35,11 @@
 
 import {mapActions} from 'vuex'
 import store from '@/store'
-import S3Footer from '@/components/S3Footer'
+import s3Footer from '@/components/s3-footer'
 
 export default {
   name: 'login',
-  components: {S3Footer},
+  components: {s3Footer},
   props:{
     company: {
       type: String,
@@ -77,6 +77,7 @@ export default {
           this.logining = true
           var loginParams = {username: this.ruleForm.account, password: this.ruleForm.checkPass}
           s3.ajax('/login', loginParams, 'usermanage').then((res) => {
+            console.log(res)
             if(res.retCode === '200') {
                that.$router.push('/Home')
             }

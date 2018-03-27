@@ -21,7 +21,7 @@ export default {
     },
   created(){
     this.fullyear = new Date().getFullYear();
-  },
+  }
 }
 </script>
 
