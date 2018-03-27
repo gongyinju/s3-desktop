@@ -22,14 +22,32 @@ function exportJson(data,project){
   // 输出文件
   var w_data = new Buffer(data)
   var url = 'mocks' + ('/'+project||'') + '/config/router.json'
-  console.log(url)
-  fs.writeFile(resolve(url), w_data,{}, function (err) {
-    if (err) {
-      console.error(err)
-    } else {
-      console.log('生成路由配置文件...')
-    }
-  })
+  try {
+    fs.writeFile(resolve(url), w_data,{}, function (err) {
+      if (err) {
+        console.log('文件夹不存在，创建中...')
+        if(project != ''){
+          var path = 'mocks/'+project
+          fs.mkdirSync(resolve(path))
+          path = 'mocks/'+project+'/config'
+          fs.mkdirSync(resolve(path))
+        }else{
+          fs.mkdirSync(resolve('mocks/conifg'))
+        }
+        fs.writeFile(resolve(url), w_data,{}, function (err) {
+          if(err){
+
+          }else {
+            console.log('生成路由配置文件...')
+          }
+        })
+      } else {
+        console.log('生成路由配置文件...')
+      }
+    })
+  }catch(e){
+
+  }
 }
 
 class EmitRouterPlugin { 
