@@ -21,14 +21,13 @@
       </div>
 
     </el-form>
+
   </div>
 </template>
 
 <script>
 
 import store from '@/store'
-console.log(store);
-
   export default {
     props:{
       success: {
@@ -124,7 +123,7 @@ console.log(store);
 </script>
 
 <style scoped>
-  .login{width:400px;padding:30px;position: fixed;top:17%;right:11%;}
+  .login{width:400px;padding:30px;position: fixed;top:17%;right:11%;background-color:#fff;}
   .btn{width:280px;margin:0 auto;overflow: hidden;margin-top:40px;}
   .btn button{width:100px;}
   .submit{float: left;}
