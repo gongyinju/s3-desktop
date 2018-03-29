@@ -64,7 +64,7 @@ data() {
 </script>
 
 <style scoped>
-  .head{width:100%;height:60px;line-height: 60px;background-color:#f1f1f1;}
+  .head{min-width:1250px;height:60px;line-height: 60px;background-color:#f1f1f1;}
   .head_main{width:1250px;margin:0 auto;overflow: hidden;}
   .head_main_logo{float: left;}
   .head_main_logo img{width:80px;height:30px;vertical-align: middle;}

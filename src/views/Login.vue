@@ -1,5 +1,10 @@
 <template>
   <div class="main">
+
+    <p class="loginTitle">
+      你好！欢迎来到<span>{{company}}</span>
+    </p>
+
     <img class="loginPic" :src="loginPic" >
     <s3-login v-show="show" 
       :logo="logo" 
@@ -7,7 +12,7 @@
       :company="company"
        @hide="boolean">
     </s3-login>
-    <s3-firstlogin v-if="showFirstLogin"></s3-firstlogin>
+    <s3-firstlogin :success="success" v-if="showFirstLogin"></s3-firstlogin>
     <s3-footer></s3-footer>
   </div>
 </template>
@@ -21,7 +26,7 @@ import s3Footer from '@/components/s3-footer'
 export default {
   data () {
     return {
-      success: '/',
+      success: '/Index',
       show: true,
       company: config.basic.companyName,
       logo: config.basic.logo,
@@ -56,6 +61,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
+  .loginTitle{position: absolute;top:10px;left:100px;font-size: 12px;color:#fff;}
   .loginPic{width:100%;height:843px;margin-bottom:-5px;}
 </style>

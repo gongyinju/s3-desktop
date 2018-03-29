@@ -21,6 +21,7 @@ export default {
 </script>
 
 <style scoped>
+  .app{min-width:1250px;overflow: hidden;}
   .skin-color{
     color:#409EFF;
   }

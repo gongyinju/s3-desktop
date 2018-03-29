@@ -154,9 +154,9 @@
 </script>
 
 <style>
-	.firstLogin{width:500px;background-color:#fff;border:1px solid #000;position:fixed;left:50%;margin-left:-250px;top:3%;}
-	.title{width:100%;padding:10px 10px;margin-bottom:10px;}
+	.firstLogin{width:500px;background-color:#fff;position:fixed;left:50%;margin-left:-250px;top:8%;border-radius: 5px;}
+	.title{width:100%;padding:15px 15px;margin-bottom:10px;}
 	.demo-ruleForm{width:80%;margin:0 auto;}
 	.btn{width:200px;}
-	.tip{font-size:12px;padding:10px;margin-top:-10px;}
+	.tip{font-size:12px;padding:15px;margin-top:-10px;}
 </style>

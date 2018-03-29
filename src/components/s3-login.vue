@@ -1,8 +1,10 @@
 <template>
   <div class="main">
+  
     <div class="loginTitle">
       <p>用户登录</p>
     </div>
+
     <div class="login">
       <el-form label-position="left" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 
@@ -36,7 +38,7 @@ import store from '@/store'
     props:{
       success: {
         type: String,
-        default: '/home'
+        default: '/Index'
       },
       loginPic: {
         type: String,
@@ -88,7 +90,6 @@ import store from '@/store'
           };
           getPublicKey()
             .then(data => {
-              console.log(data)
               let pwd = s3.RSAEncrypt(data.modulus,data.exponent,self.ruleForm.password);
               let param = {
                 loginName: self.ruleForm.name,
@@ -98,18 +99,18 @@ import store from '@/store'
               return s3.ajax('/login',param,'usermanage')
             })
             .then(result => {
-              console.log(result);
               if (result.retCode === '200'){
                 let firstLoginFlag = true;
                 if (result.isFirstLogin === 'true') {
                   firstLoginFlag = true;
                   self.$store.commit('userFirstLogin',firstLoginFlag)
+                  this.$emit('hide',false);
                 } else {
                   self.$store.commit('userLogin')
                   self.$store.dispatch('getUserState')
                   self.$router.push(self.success)
                 }
-                this.$emit('hide',false);
+               
               } else {
                 MessageBox('提示', result.retMsg ||result.retmsg )
               }
@@ -131,7 +132,7 @@ import store from '@/store'
 </script>
 
 <style scoped>
-  .main{width:400px;position: fixed;top:17%;right:11%;background-color:#fff;overflow: hidden;border-radius: 5px}
+  .main{width:450px;position: fixed;top:17%;right:11%;background-color:#fff;overflow: hidden;border-radius: 5px}
   .login{padding:0 30px 30px 30px;}
   .loginTitle{width:100%;line-height:60px;margin-bottom:10px;}
   .loginTitle>p{padding-left:30px;}
