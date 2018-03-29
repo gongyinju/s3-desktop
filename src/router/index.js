@@ -6,6 +6,7 @@ import Login from '@/views/Login'
 import Index from '@/views/module/index'
 import Purchase from '@/views/module/purchase'
 import Check from '@/views/module/check'
+import Instock from '@/views/module/instock'
 
 Vue.use(VueRouter)
 
@@ -34,6 +35,10 @@ let routes = [
       {
         path: '/Check',
         component: function (resolve) {require(['@/views/module/check'], resolve)}
+      },
+      {
+        path: '/Instock',
+        component: function (resolve) {require(['@/views/module/instock'], resolve)}
       }
     ]
   }
@@ -54,15 +59,15 @@ router.beforeEach((to, from, next) => {
   // 进入路由前
   console.log('导航开始，进入组件前，导航触发')
   next()
-  // if (to.path === '/login') {
-  //   next()
-  // } else {
-  //   if (to.meta.requiresAuth && !sessionStorage.getItem('accessToken')) {
-  //     next({path: '/login'})
-  //   } else {
-  //     next()
-  //   } //如果不需要登录验证，或者已经登录成功，则直接放行
-  // }
+  if (to.path === '/login') {
+    next()
+  } else {
+    if (to.meta.requiresAuth && !sessionStorage.getItem('accessToken')) {
+      next({path: '/login'})
+    } else {
+      next()
+    } //如果不需要登录验证，或者已经登录成功，则直接放行
+  }
 })
 
 router.afterEach((to, from) => {

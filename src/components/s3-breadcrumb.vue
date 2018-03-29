@@ -12,5 +12,5 @@
 </script>
 
 <style scoped>
-	.el-breadcrumb{line-height:50px;margin-top:10px;}
+	.el-breadcrumb{width:1250px;margin:0 auto;line-height:50px;margin-top:10px;}
 </style>

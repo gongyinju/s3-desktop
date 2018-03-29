@@ -12,12 +12,7 @@
         </li>
       </el-menu>
     </el-col>
-  
-    <el-col :span="20">
-      <p>123123123</p>
-      <router-view class="main" name="rightMain"></router-view>
-    </el-col>
-   </div>
+  </div>
 </template>
 
 

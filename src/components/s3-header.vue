@@ -2,11 +2,11 @@
     <div class="head">
       <div class="head_main">
         <div class="head_main_logo">
-          <img :src="images" alt="">
+          <img :src="logo" alt="">
           <span>{{company}}</span>
         </div>
         <div class="head_main_info">
-          <span>你好，<span class="skin-color">某某某下游经销商</span>，您当前的角色是<span class="skin-color" style="padding-left: 5px;">{{this.value}}</span>！</span>
+          <span>你好，<span class="skin-color">某某某下游{{this.value}}</span>，您当前的角色是<span class="skin-color" style="padding-left: 5px;">{{this.value}}</span>！</span>
 
           <span class="mar_l20">角色切换：</span>
           <el-select style="width:100px;margin-right:10px;" size="mini" v-model="value" placeholder="请选择">
@@ -48,7 +48,7 @@ data() {
       type: String,
       default:'某某集团'
     },
-    images:{
+    logo:{
       type: String,
       default:'http://img.hb.aicdn.com/b4e756dff556ef08277874acd970c6a14219290b3285e-5yoSex_fw658'
     }

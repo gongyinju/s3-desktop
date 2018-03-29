@@ -1,9 +1,9 @@
 <template>
   <div>
-    <s3-header></s3-header>
+    <s3-header :company="company" :logo="logo"></s3-header>
     <s3-nav :nav="nav"></s3-nav>
-    <router-view></router-view>
-    <s3-footer class="footer"></s3-footer>
+    <router-view class="view"></router-view>
+    <s3-footer :company="company" :logo="logo" class="footer"></s3-footer>
   </div>
 </template>
 
@@ -18,7 +18,9 @@ export default {
   name: 'Home',
   data () {
     return {
-      nav:[]
+      nav:[],
+      company: config.basic.companyName,
+      logo: config.basic.logo
     }
   },
   components:{
@@ -39,6 +41,7 @@ export default {
 </script>
 
 <style>
+  .view{min-height: 500px}
   .el-carousel{width:100%;height:300px;}
   .el-carousel__item h3 {
     font-size: 14px;
@@ -54,5 +57,4 @@ export default {
   .el-carousel__item:nth-child(2n+1) {
      background-color: #d3dce6;
   }
-  .footer{width:100%;position: fixed;bottom:0;left: 0;}
 </style>

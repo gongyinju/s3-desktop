@@ -13,7 +13,7 @@
        @hide="boolean">
     </s3-login>
     <s3-firstlogin :success="success" v-if="showFirstLogin"></s3-firstlogin>
-    <s3-footer></s3-footer>
+    <s3-footer :company="company" :logo="logo" class="footer"></s3-footer>
   </div>
 </template>
 

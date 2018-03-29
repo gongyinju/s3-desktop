@@ -23,3 +23,7 @@ import s3Breadcrumb from '@/components/s3-breadcrumb'
 		}
 	}
 </script>
+
+<style scoped>
+	
+</style>

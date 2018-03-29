@@ -1,7 +1,10 @@
 <template>
 <div>
   <el-container>
-    <el-footer>{{company}}copyright@{{fullyear}}<img class="logo" :src="images" alt="" width="80" height="30"></el-footer>
+    <el-footer>
+      {{company}}copyright@{{fullyear}}
+      <img class="logo" :src="logo" alt="" width="80" height="30">
+    </el-footer>
   </el-container>
 </div>
 </template>
@@ -12,16 +15,16 @@ export default {
     props:{
       company: {
         type: String,
-        default:'某某集团'
+       // default:'某某集团'
       },
-      images:{
+      logo:{
         type: String,
-        default:'http://img.hb.aicdn.com/b4e756dff556ef08277874acd970c6a14219290b3285e-5yoSex_fw658'
+        //default:'http://img.hb.aicdn.com/b4e756dff556ef08277874acd970c6a14219290b3285e-5yoSex_fw658'
       }
     },
-  created(){
-    this.fullyear = new Date().getFullYear();
-  }
+    created(){
+      this.fullyear = new Date().getFullYear();
+    }
 }
 </script>
 

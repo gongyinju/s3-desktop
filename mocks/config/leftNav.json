@@ -1,7 +1,7 @@
 {
 	"retCode":"200",
 	"menuList":[
-		{"enable":1,"menuIcon":"","menuId":"184","menuName":"发货单","menuUrl":"myInstock","pareUrl":"266","parentId":"266"},
+		{"enable":1,"menuIcon":"","menuId":"184","menuName":"发货单","menuUrl":"Instock","pareUrl":"266","parentId":"266"},
 		{"enable":1,"menuIcon":"","menuId":"194","menuName":"入库单","menuUrl":"myStock","pareUrl":"266","parentId":"266"},
 		{"enable":1,"menuIcon":"","menuId":"221","menuName":"退货单","menuUrl":"myReturnbill","pareUrl":"266","parentId":"266"},
 		{"enable":1,"menuIcon":"","menuId":"196","menuName":"结账单","menuUrl":"settleOrder","pareUrl":"266","parentId":"266"}
