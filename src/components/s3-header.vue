@@ -7,12 +7,16 @@
         </div>
         <div class="head_main_info">
           <span>你好，<span class="skin-color">某某某下游经销商</span>，您当前的角色是<span class="skin-color" style="padding-left: 5px;">{{this.value}}</span>！</span>
+
           <span class="mar_l20">角色切换：</span>
           <el-select style="width:100px;margin-right:10px;" size="mini" v-model="value" placeholder="请选择">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
+
           <el-button type="text" class="text-black"><i style="left:-5px" class="iconfont icon-yonghuming"></i>用户信息</el-button>
+
           <el-button type="text" class="text-black"><i style="left:-5px;top:2px;" class="iconfont icon-xiugaimima2"></i>修改密码</el-button>
+
           <el-button type="text" class="text-black" @click.native.prevent="logout"><i style="left:-5px;top:1px;" class="iconfont icon-tuichu"></i>退出</el-button>
         </div>
       </div>
@@ -68,4 +72,5 @@ data() {
   .head_main_info{float: right;font-size:12px;}
   .iconfont{position:relative;}
   .el-input>.el-input__inner{height:30px !important;width:90px !important;color:red;}
+  .text-black{color:#000;}
 </style>

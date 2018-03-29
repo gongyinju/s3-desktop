@@ -34,9 +34,6 @@ export default {
     height: 80px!important;
     line-height: 80px;
     width: 100%;
-    position: fixed;
-    bottom: 0;
-    left:0;
   }
   .logo{
     vertical-align: middle;

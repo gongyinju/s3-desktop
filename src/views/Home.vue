@@ -3,7 +3,7 @@
     <s3-header></s3-header>
     <s3-nav :nav="nav"></s3-nav>
     <router-view></router-view>
-    <s3-footer></s3-footer>
+    <s3-footer class="footer"></s3-footer>
   </div>
 </template>
 
@@ -54,4 +54,5 @@ export default {
   .el-carousel__item:nth-child(2n+1) {
      background-color: #d3dce6;
   }
+  .footer{width:100%;position: fixed;bottom:0;left: 0;}
 </style>

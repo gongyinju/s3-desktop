@@ -1,27 +1,31 @@
 <template>
-  <div class="login">
-    <el-form label-position="left" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+  <div class="main">
+    <div class="loginTitle">
+      <p>用户登录</p>
+    </div>
+    <div class="login">
+      <el-form label-position="left" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 
-      <el-form-item label="用户名" prop="name">
-        <el-input placeholder="请输入用户名" v-model="ruleForm.name"></el-input>
-      </el-form-item>
+        <el-form-item label="用户名" prop="name">
+          <el-input placeholder="请输入用户名" v-model="ruleForm.name"></el-input>
+        </el-form-item>
 
-      <el-form-item label="密码" prop="password">
-        <el-input placeholder="请输入密码" v-model="ruleForm.password"></el-input>
-      </el-form-item>
-            
-      <div class="handle">
-        <el-checkbox v-model="checked">记住用户名</el-checkbox>
-        <span class="resetPassword">忘记密码</span>
-      </div>
+        <el-form-item label="密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="ruleForm.password"></el-input>
+        </el-form-item>
+              
+        <div class="handle">
+          <el-checkbox v-model="checked">记住用户名</el-checkbox>
+          <span class="resetPassword">忘记密码</span>
+        </div>
 
-      <div class="btn">
-        <el-button class="submit" type="primary" @click="submitForm('ruleForm')">登录</el-button>
-        <el-button class="reset" @click="resetForm('ruleForm')">重置</el-button>
-      </div>
+        <div class="btn">
+          <el-button class="submit" type="primary" @click="submitForm('ruleForm')">登录</el-button>
+          <el-button class="reset" @click="resetForm('ruleForm')">重置</el-button>
+        </div>
 
-    </el-form>
-
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -33,6 +37,9 @@ import store from '@/store'
       success: {
         type: String,
         default: '/home'
+      },
+      loginPic: {
+        type: String,
       }
     },
     data() {
@@ -102,6 +109,7 @@ import store from '@/store'
                   self.$store.dispatch('getUserState')
                   self.$router.push(self.success)
                 }
+                this.$emit('hide',false);
               } else {
                 MessageBox('提示', result.retMsg ||result.retmsg )
               }
@@ -123,7 +131,10 @@ import store from '@/store'
 </script>
 
 <style scoped>
-  .login{width:400px;padding:30px;position: fixed;top:17%;right:11%;background-color:#fff;}
+  .main{width:400px;position: fixed;top:17%;right:11%;background-color:#fff;overflow: hidden;border-radius: 5px}
+  .login{padding:0 30px 30px 30px;}
+  .loginTitle{width:100%;line-height:60px;margin-bottom:10px;}
+  .loginTitle>p{padding-left:30px;}
   .btn{width:280px;margin:0 auto;overflow: hidden;margin-top:40px;}
   .btn button{width:100px;}
   .submit{float: left;}
