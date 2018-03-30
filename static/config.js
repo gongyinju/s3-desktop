@@ -6,7 +6,7 @@ config.modules = {};
 
 //PART I    BASIC
 config.basic.companyName = "ABC有限公司电子供应链平台";
-config.basic.loginPic = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522896707&di=3a4839cd8cbefea001a30ee65e62cc57&imgtype=jpg&er=1&src=http%3A%2F%2Fimg17.3lian.com%2Fd%2Ffile%2F201702%2F13%2F2ca903d96d4f309bfbd94ce7bb25eb38.jpg",
+config.basic.loginPic = "http://file.gongyinju.com/group1/M00/00/4A/bQYdm1lteQuAAJcUABH3R1Izexo169.jpg",
 config.basic.logo = "http://file.gongyinju.com/group1/M00/00/5B/bQYdm1mH6MCARxkxAABfhUPd7bM324.jpg";
 config.basic.theme = "skinRed";
 //是否需要登陆

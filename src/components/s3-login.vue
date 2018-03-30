@@ -42,6 +42,7 @@ import store from '@/store'
       },
       loginPic: {
         type: String,
+        default: 'http://file.gongyinju.com/group1/M00/00/4A/bQYdm1lteQuAAJcUABH3R1Izexo169.jpg'
       }
     },
     data() {

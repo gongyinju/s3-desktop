@@ -10,10 +10,28 @@ import Instock from '@/views/module/instock'
 
 Vue.use(VueRouter)
 
+
+let loginRoutes = []
+try {
+  let loginConfig = config.basic.login
+  loginRoutes = [
+    {
+      path: '/login',
+      name: '',
+      meta: {
+        allowBack:false
+      },
+      component: Login
+    }
+  ]
+}catch(e){
+
+}
+
 let routes = [
   {
     path: '/',
-    component: Login
+    redirect: 'Home'
   },
   {
     path: '/Home',
@@ -44,6 +62,8 @@ let routes = [
   }
 ]
 
+routes = loginRoutes.concat(routes)
+
 var router = new VueRouter({
   routes
 })
@@ -56,23 +76,36 @@ var router = new VueRouter({
  *
 */
 router.beforeEach((to, from, next) => {
-  // 进入路由前
-  console.log('导航开始，进入组件前，导航触发')
-  next()
-  if (to.path === '/login') {
+
+  let backState = ''
+  if(to.meta.backState){
+    backState = to.meta.backState
+  }else if(to.path !== '/login' && to.path !== '/home' && to.path !== '/'){
+    backState = from.path
+  }
+
+  let page = {
+    title: to.name,
+    backState: backState,
+    goHome: to.meta.goHome || false
+  }
+  store.commit('pageinfo', page)
+
+  // console.log(store.state)  
+  // 进登录页面直接进，不用判登录
+  if(config.basic.login == false || to.path == '/login'){
     next()
-  } else {
-    if (to.meta.requiresAuth && !sessionStorage.getItem('accessToken')) {
-      next({path: '/login'})
-    } else {
-      next()
-    } //如果不需要登录验证，或者已经登录成功，则直接放行
+  }else if(!store.getters.isLogedIn ||　store.state.isFirstLogedIn) {
+    next({
+      path: '/login'
+    })
+  }else{
+    next()
   }
 })
 
 router.afterEach((to, from) => {
   // 进入路由后
-  console.log('进入组件，守卫触发')
 })
 
 export default router
