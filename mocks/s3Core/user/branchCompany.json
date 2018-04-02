@@ -1,0 +1,10 @@
+{
+    "branchCompany":[
+      {"companyId": "02.02", "companyName": "分公司一", "userId": 330, "customerId": "qiao", "balance": 0},
+      {"companyId": "10001", "companyName": "分公司二", "userId": 330, "customerId": "qiao", "balance": 0},
+      {"companyId": "10010", "companyName": "分公司三", "userId": 330, "customerId": "qiao", "balance": 0},
+      {"companyId": "888.01", "companyName": "分公司四", "userId": 330, "customerId": "qiao", "balance": 0}
+    ],
+    "companyId":null,"status":"000","total":4
+
+}

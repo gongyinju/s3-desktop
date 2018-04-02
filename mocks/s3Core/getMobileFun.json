@@ -1,0 +1,46 @@
+{
+  "retCode": "200",
+  "menuList": [
+    {
+      "parentId": 1,
+      "menuUrl": "/jsCom",
+      "businessKey": "skblapp",
+      "enable": 1,
+      "menuId": 345,
+      "type": "3",
+      "menuName": "js组件",
+      "bottom":1
+    },
+    {
+      "parentId": 1,
+      "menuIcon": "",
+      "menuUrl": "/cssCom",
+      "businessKey": "skblapp",
+      "enable": 1,
+      "menuId": 343,
+      "type": "3",
+      "menuName": "css组件",
+      "bottom":1
+    },
+    {
+      "parentId": 1,
+      "menuIcon": "icon-tuangou1 color-credit",
+      "menuUrl": "/s3Com",
+      "enable": 1,
+      "menuId": 247,
+      "type": "1",
+      "menuName": "s3组件",
+      "bottom":1
+    },
+    {
+      "parentId": 1,
+      "menuUrl": "/formCom",
+      "businessKey": "skblapp",
+      "enable": 1,
+      "menuId": 322,
+      "type": "3",
+      "menuName": "form组件",
+      "bottom":1
+    }
+  ]
+}
