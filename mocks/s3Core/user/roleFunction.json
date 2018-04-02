@@ -1,0 +1,9 @@
+{
+	"retCode":"200",
+	"menuList":[
+		{"parentId":4,"menuUrl":"/s3Core/app/desktop/index.php","businessKey":"outer","enable":1,"menuId":291,"type":"1","menuName":"特色功能"},
+		{"parentId":1,"menuIcon":"icon-shenhe color-more","menuUrl":"check","enable":1,"menuId":255,"type":"1","menuName":"审批"},
+		{"parentId":1,"menuIcon":"icon-zhanghuguanli color-finance","menuUrl":"userManage","enable":1,"menuId":299,"type":"1","menuName":"用户管理"},
+		{"sMenuUrl":"noticeBoardEdit","parentId":1,"menuIcon":"icon-gonggao color-more","menuUrl":"noticeBoardManage","enable":1,"menuId":307,"type":"1","menuName":"公告栏"}
+	]
+}
