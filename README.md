@@ -1,23 +1,28 @@
-# s3
+# s3-mobile-local
 
-> A Vue.js project
+> 新框架移动端基础架构
 
-## Build Setup
+## 前置条件
 
-``` bash
-# install dependencies
-npm install
+如果还没有安装Node和Npm，请移步http://109.6.13.48/nfc-chent/doc-base/tree/master 按照教程安装node、npm后，再来本项目。
 
-# serve with hot reload at localhost:8080
-npm run dev
 
-# build for production with minification
-npm run build
 
-# build for production and view the bundle analyzer report
-npm run build --report
+## 下载框架
+
+```bash
+# cd到你想要存放的文件
+cd /d/www/s3/
+
+# 下载框架
+git clone http://109.6.13.48/nfc-chent/vue-s3-desktop.git
 ```
 
+## 框架结构
+
+下面是框架的整体结构
+
+```bash
 ├── index.html                      入口页面
     ├── build                           构建脚本目录
     │   ├── build-components.js                 运行本地构建服务器，可以访问构建后的页面
@@ -34,24 +39,46 @@ npm run build --report
     │   ├── index.js                        项目配置文件
     │   ├── prod.env.js                     生产环境变量
     │   └── test.env.js                     测试环境变量
-    ├── server                            express本地服务
-    │   └── static                        异步组件打包地址
+    ├── mocks                            express本地服务
+    │   └── usermanage                        
     │   └── hello.js
     ├── package.json                    npm包配置文件，里面定义了项目的npm脚本，依赖包等信息
     ├── src                             项目源码目录    
     │   ├── main.js                         入口js文件
     │   ├── app.vue                         根组件
     │   ├── components                      公共组件目录
-    │   │   └── title.vue
-    │   ├── assets                          资源目录，这里的资源会被wabpack构建
+    │   │   └── xxx.vue
+    │   ├── assets                          # 资源目录，这里的资源会被wabpack构建
     │   │   └── images
     │   │       └── logo.png
-    │   ├── routes                          前端路由
+    │   ├── routes                          # 前端路由
     │   │   └── index.js
-    │   ├── store                           应用级数据（state）
+    |   |   |--- router-export.js           # 个性化导出组件配置
+    │   ├── store                           # 应用级数据(全局)
     │   │   └── index.js
-    │   └── views                           页面目录
+    │   └── views                           # 页面目录
     │       ├── hello.vue
     │       └── notfound.vue
-    ├── static                          纯静态资源，不会被wabpack构建。
+    ├── static                               # 纯静态资源，不会被wabpack构建。
+```
+其中，`src`文件夹为项目开发目录，目录中，`assets`为项目资源，`src/routes/`为路由配置，`src/store/`为状态配置，`src/views`为页面目录
+
+## 安装依赖和运行
+
+``` bash
+# install dependencies 安装依赖
+npm install
+
+# serve with hot reload at localhost:8080  
+# 启动本地调试服务器
+npm run dev
+
+# build for production with minification
+# 打包生产环境版本
+npm run build
+
+# build for production of async components
+# 打包异步特色组件
+npm run build-component
+```
 
