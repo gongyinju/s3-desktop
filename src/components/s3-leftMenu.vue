@@ -12,6 +12,7 @@
         </li>
       </el-menu>
     </el-col>
+    {{leftNav}}
   </div>
 </template>
 
@@ -26,7 +27,7 @@
     },
     created(){
       //获取导航数据
-      s3.ajax('/leftNav',{},'config')
+      s3.ajax('/'+this.leftNav,{},'config')
         .then(res =>{
           this.navList = res.menuList;
           console.log(res)

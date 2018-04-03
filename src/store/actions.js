@@ -14,7 +14,7 @@ export default {
  					let role = user.UserEntityroles[0]
  					context.commit('setCurrentRole',role)
  				}
-                router.push('/')
+                router.push('/Index')
 			}
     	}).catch(error => {
             console.log(error)

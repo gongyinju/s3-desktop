@@ -7,6 +7,8 @@ import Index from '@/views/module/index'
 import Purchase from '@/views/module/purchase'
 import Check from '@/views/module/check'
 import Instock from '@/views/module/instock'
+import MyStock from '@/views/module/myStock'
+
 
 Vue.use(VueRouter)
 
@@ -44,7 +46,21 @@ let routes = [
       },
       {
         path: '/Purchase',
-        component: function (resolve) {require(['@/views/module/purchase'], resolve)}
+        component: function (resolve) {require(['@/views/module/purchase'], resolve)},
+        children:[
+          {
+            path: '/',
+            component: function (resolve) {require(['@/views/module/instock'], resolve)}
+          },
+          {
+            path: '/Instock',
+            component: function (resolve) {require(['@/views/module/instock'], resolve)}
+          },
+          {
+            path: '/MyStock',
+            component: function (resolve) {require(['@/views/module/myStock'], resolve)}
+          }
+        ]
       },
       {
         path: '/Index',
@@ -53,10 +69,6 @@ let routes = [
       {
         path: '/Check',
         component: function (resolve) {require(['@/views/module/check'], resolve)}
-      },
-      {
-        path: '/Instock',
-        component: function (resolve) {require(['@/views/module/instock'], resolve)}
       }
     ]
   }
