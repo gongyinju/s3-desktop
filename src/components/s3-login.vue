@@ -7,7 +7,6 @@
 
     <div class="login">
       <el-form label-position="left" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-
         <el-form-item label="用户名" prop="name">
           <el-input placeholder="请输入用户名" v-model="ruleForm.name"></el-input>
         </el-form-item>
@@ -20,12 +19,9 @@
           <el-checkbox v-model="checked">记住用户名</el-checkbox>
           <span class="resetPassword">忘记密码</span>
         </div>
-
         <div class="btn">
           <el-button class="submit" type="primary" @click="submitForm('ruleForm')">登录</el-button>
-          <el-button class="reset" @click="resetForm('ruleForm')">重置</el-button>
         </div>
-
       </el-form>
     </div>
   </div>
@@ -73,8 +69,8 @@ import store from '@/store'
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
         if (valid) {
-
           let self = this;
+
           var getPublicKey = function() {
             return new Promise((resolve,reject) => {
               let param = {
@@ -88,7 +84,8 @@ import store from '@/store'
                 }
               })
             })
-          };
+          }
+
           getPublicKey()
             .then(data => {
               let pwd = s3.RSAEncrypt(data.modulus,data.exponent,self.ruleForm.password);
@@ -105,28 +102,21 @@ import store from '@/store'
                 if (result.isFirstLogin === 'true') {
                   firstLoginFlag = true;
                   self.$store.commit('userFirstLogin',firstLoginFlag)
-                  this.$emit('hide',false);
                 } else {
                   self.$store.commit('userLogin')
                   self.$store.dispatch('getUserState')
                   self.$router.push(self.success)
-                }
-               
+                }  
               } else {
-                MessageBox('提示', result.retMsg ||result.retmsg )
+                this.$alert(result.retMsg ||result.retmsg,'warning')
               }
             })
             .catch(error => {
+              this.$alert(error,'warning')
               throw new Error(error)
             })
-          } else {
-            console.log('error submit!!');
-            return false;
           }
         });
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
       }
     }
   }
@@ -137,10 +127,7 @@ import store from '@/store'
   .login{padding:0 30px 30px 30px;}
   .loginTitle{width:100%;line-height:60px;margin-bottom:10px;}
   .loginTitle>p{padding-left:30px;}
-  .btn{width:280px;margin:0 auto;overflow: hidden;margin-top:40px;}
-  .btn button{width:100px;}
-  .submit{float: left;}
-  .reset{float: right;}
-  .resetPassword{float: right;font-size: 14px;color:#1c9fe1;cursor: pointer;}
+  .btn{width:100%;margin:0 auto;overflow: hidden;margin-top:40px;padding:0;}
+  .btn button{width:100%}
   .handle{width:100%;overflow: hidden;}
 </style>

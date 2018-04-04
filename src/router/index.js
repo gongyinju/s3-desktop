@@ -102,8 +102,7 @@ router.beforeEach((to, from, next) => {
     goHome: to.meta.goHome || false
   }
   store.commit('pageinfo', page)
-
-  // console.log(store.state)  
+   console.log(store.state)  
   // 进登录页面直接进，不用判登录
   if(config.basic.login == false || to.path == '/login'){
     next()

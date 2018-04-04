@@ -2,15 +2,13 @@
   <div class="main">
 
     <p class="loginTitle">
-      你好！欢迎来到<span>{{company}}</span>
+      <span>{{company}}供应链服务平台</span>
     </p>
-
     <img class="loginPic" :src="loginPic" >
-    <s3-login v-show="show" 
+    <s3-login v-show="!isLoggedIn && !showFirstLogin" 
       :logo="logo" 
       :success="success"
-      :company="company"
-       @hide="boolean">
+      :company="company">
     </s3-login>
     <s3-firstlogin :success="success" v-if="showFirstLogin"></s3-firstlogin>
     <s3-footer :company="company" :logo="logo" class="footer"></s3-footer>
@@ -27,15 +25,9 @@ export default {
   data () {
     return {
       success: '/Index',
-      show: true,
       company: config.basic.companyName,
       logo: config.basic.logo,
       loginPic: config.basic.loginPic
-    }
-  },
-  methods: {
-    boolean: function(data){
-      this.show = data
     }
   },
   computed: {
@@ -46,6 +38,9 @@ export default {
       set: function(){
         this.$store.commit('userFirstLogin',this.showFirstLogin)
       }
+    },
+    isLoggedIn () {
+      return this.$store.state.isLoggedIn
     }
   },
   components: {

@@ -87,13 +87,13 @@ s3.ajax('/config/router',{},appid)
     store,
     components: { App },
     template: '<App/>',
-    mounted () {
+    created () {
       if(config.basic['login']=== false){
         store.commit('setAppId',appid)
       }else{
         store.commit('setAppId',appid)
         store.dispatch('getUserState',appid)
-      } 
+      }
     }
   })
 })

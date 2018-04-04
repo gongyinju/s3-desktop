@@ -10,7 +10,7 @@
 
 	    <el-form-item label="验证码" prop="validatecode">
 	        <el-input style="width:190px;margin-right: 13px;" placeholder="请输入验证码" v-model.number="ruleForm.validatecode"></el-input>
-	        <el-button style="padding: 12px 10px;" type="primary">获取验证码</el-button>
+	        <el-button style="padding: 12px 10px;" type="primary" @click="getValidateCode">{{validatorText}}</el-button>
 	    </el-form-item>
 			
 			<el-form-item label="旧密码" prop="oldPassword">
@@ -49,7 +49,6 @@
       }
     },
     data() {
-
     	//验证手机号
       var checkPhone = (rule, value, callback) => {
       	var val = value+"";
@@ -116,7 +115,8 @@
           repeatPassword: [
             { required: true, validator: validateCheckPass, trigger: 'blur' }
           ]
-        }
+        },
+        validatorText: '获取验证码'
       };
     },
 
@@ -130,21 +130,90 @@
     },
 
     methods: {
+      getValidateCode (phone) {
 
-    	submitForm(formName) {
+        let self = this
+
+
+        var param = {
+          mobile:phone,
+          appid:this.appid,
+          loginName: this.user.UserEntityloginName
+        }
+
+
+        s3.ajax('/validateCode',param,'usermanage')
+        .then( result => {
+          if(result.retCode !== "200"){
+            this.$alert(result.retMsg,"错误")
+          }else{
+            this.$message('验证码已发送至'+ phone +'请查收');
+          }
+        })
+
+        self.validatorText = 60
+        s3.timer.interval(function(){
+          self.validatorText--
+          if(self.validatorText == 0){
+            self.validatorText = '获取验证码'
+          }
+        },0,1000,60000)
+      },
+
+    	submitForm (formName) {
+        let self = this
+
+        var getPublicKey = function() {
+          return new Promise((resolve,reject) => {
+            let param = {
+              appid: self.appid
+            }
+            s3.ajax('/publicKey',param,'usermanage').then(result => {
+              if(result.retCode == '200') {
+                resolve(result) 
+              } else {
+                reject(result)
+              }
+            })
+          })
+        }
+
         this.$refs[formName].validate((valid) => {
           if (valid) {
 
-            console.log("ok");
-            this.$store.commit('userFirstLogin',false)
-		        this.$store.commit('userLogin')
-		        this.$store.dispatch('getUserState')
-		        this.$router.push(this.success)
+            getPublicKey()
+            .then(data => {
+              let oldPassword = s3.RSAEncrypt(data.modulus,data.exponent,self.ruleForm.oldPassword)
+              let newPassword = s3.RSAEncrypt(data.modulus,data.exponent,self.ruleForm.newPassword)
+              let confirmPassword = s3.RSAEncrypt(data.modulus,data.exponent,self.ruleForm.repeatPassword)
+
+
+              let param = {
+                oldPassword:oldPassword,
+                newPassword:newPassword,
+                confirmpassword:confirmPassword,
+                mobile:self.ruleForm.phone,
+                validateCode:self.ruleForm.validatecode
+              }
+              return s3.ajax('/firstLogin',param,'usermanage')
+            })
+            .then(result=>{
+              if(result.retCode && result.retCode == "200"){
+                self.$store.commit('userFirstLogin',false)
+                self.$store.commit('userLogin')
+                s3.istore.set('isLogedIn',true)
+                self.$store.dispatch('getUserState')
+                self.$router.push('/')
+              }else{
+                self.$alert(result.retMsg,'出错了')
+              }
+            })
           } else {
             console.log('error submit!!');
             return false;
           }
-        });
+
+        })
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
